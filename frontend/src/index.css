@@ -3,3 +3,7 @@ main {
   /* display: grid;
   grid-template-rows: 1fr 2fr 1fr; */
 }
+
+.rating span {
+  margin: 0.1rem
+}
