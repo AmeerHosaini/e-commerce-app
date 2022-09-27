@@ -9,13 +9,25 @@ import {
   ListGroupItem,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
-import products from "../products";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Products = () => {
   const params = useParams();
   // console.log(params.id);
 
-  const product = products.find((product) => product._id === params.id);
+  // We will fetch it from the backend
+  // const product = products.find((product) => product._id === params.id);
+
+  const [product, setProduct] = useState({});
+  useEffect(() => {
+    const getProduct = async () => {
+      const { data } = await axios.get(`/api/products/${params.id}`);
+      setProduct(data);
+    };
+
+    getProduct();
+  }, []);
 
   return (
     <>
