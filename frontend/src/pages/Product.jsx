@@ -27,7 +27,7 @@ const Products = () => {
     };
 
     getProduct();
-  }, []);
+  }, [params.id]);
 
   return (
     <>
