@@ -1,6 +1,7 @@
 // common js syntax - front end is es module
 const express = require("express");
 const app = express();
+require("dotenv").config();
 
 const products = require("./data/products");
 
@@ -19,4 +20,11 @@ app.get("/api/products/:id", (req, res) => {
   res.json(product);
 });
 
-app.listen(5000, console.log("Server is listening on port 5000"));
+const port = process.env.PORT || 5000;
+
+app.listen(
+  port,
+  console.log(
+    `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`
+  )
+);
