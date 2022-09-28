@@ -1,9 +1,10 @@
 // common js syntax - front end is es module
-const express = require("express");
-const app = express();
-require("dotenv").config();
+import express from "express";
+import dotenv from "dotenv";
+import products from "./data/products.js";
 
-const products = require("./data/products");
+dotenv.config();
+const app = express();
 
 app.get("/", (req, res) => {
   res.send("Api is running");
