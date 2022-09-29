@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import products from "./data/products.js";
 import connectDB from "./config/db.js";
+import colors from "colors";
 
 dotenv.config();
 const app = express();
@@ -33,10 +34,11 @@ const start = async () => {
       port,
       console.log(
         `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`
+          .yellow.bold.underline
       )
     );
   } catch (error) {
-    console.log(error);
+    console.log(`Error: ${error.message}`.red.underline.bold);
   }
 };
 
