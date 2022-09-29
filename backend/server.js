@@ -2,9 +2,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import products from "./data/products.js";
+import connectDB from "./config/db.js";
 
 dotenv.config();
 const app = express();
+
+// connectDB() with the previous setup
 
 app.get("/", (req, res) => {
   res.send("Api is running");
@@ -23,9 +26,18 @@ app.get("/api/products/:id", (req, res) => {
 
 const port = process.env.PORT || 5000;
 
-app.listen(
-  port,
-  console.log(
-    `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`
-  )
-);
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    app.listen(
+      port,
+      console.log(
+        `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`
+      )
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
