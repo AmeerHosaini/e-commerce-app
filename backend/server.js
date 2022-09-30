@@ -1,29 +1,15 @@
 // common js syntax - front end is es module
 import express from "express";
 import dotenv from "dotenv";
-import products from "./data/products.js";
 import connectDB from "./config/db.js";
 import colors from "colors";
+import productRoutes from "./routes/productRoute.js";
 
 dotenv.config();
 const app = express();
 
 // connectDB() with the previous setup
-
-app.get("/", (req, res) => {
-  res.send("Api is running");
-});
-
-app.get("/api/products", (req, res) => {
-  res.json(products);
-});
-
-app.get("/api/products/:id", (req, res) => {
-  const { id: productId } = req.params;
-  // Later with the help of mongoose, we would use findOneById
-  const product = products.find((product) => product._id === productId);
-  res.json(product);
-});
+app.use("/api/products", productRoutes);
 
 const port = process.env.PORT || 5000;
 
