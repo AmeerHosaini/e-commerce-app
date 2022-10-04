@@ -1,11 +1,11 @@
-import CustomError from "./CustomError";
-import httpStatusCodes from "http-status-codes";
+const CustomError = require("./CustomError");
+const { StatusCodes } = require("http-status-codes");
 
 class NotFound extends CustomError {
   constructor(message) {
     super(message);
-    this.statusCode = httpStatusCodes.NOT_FOUND;
+    this.statusCode = StatusCodes.NOT_FOUND;
   }
 }
 
-export default NotFound;
+module.exports = NotFound;

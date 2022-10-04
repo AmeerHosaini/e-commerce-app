@@ -1,15 +1,14 @@
-// common js syntax - front end is es module
-import express from "express";
-import dotenv from "dotenv";
-import connectDB from "./config/db.js";
-import colors from "colors";
-import productRoutes from "./routes/productRoute.js";
+require("dotenv").config();
+const express = require("express");
+const connectDB = require("./config/db");
+const colors = require("colors");
+const productRoute = require("./routes/productRoute");
 
-dotenv.config();
 const app = express();
-
 // connectDB() with the previous setup
-app.use("/api/products", productRoutes);
+
+// Routes
+app.use("/api/products", productRoute);
 
 const port = process.env.PORT || 5000;
 
