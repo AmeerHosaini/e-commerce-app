@@ -3,12 +3,16 @@ const express = require("express");
 const connectDB = require("./config/db");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
+const errorHandlerMiddleware = require("./middlewares/error_handler");
 
 const app = express();
 // connectDB() with the previous setup
 
 // Routes
 app.use("/api/products", productRoute);
+
+// Error Handler Middleware --- NOTE: This must be included below the routes and every other middleware
+app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
