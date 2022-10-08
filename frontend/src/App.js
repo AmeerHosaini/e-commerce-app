@@ -3,7 +3,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Product from "./pages/Product";
+import ProductPage from "./pages/ProductPage";
 
 const App = () => {
   return (
@@ -13,7 +13,7 @@ const App = () => {
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<Product />} />
+            <Route path="/product/:productID" element={<ProductPage />} />
           </Routes>
         </Container>
       </main>

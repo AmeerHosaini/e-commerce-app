@@ -16,14 +16,14 @@ const getProducts = asyncHandler(async (req, res) => {
 // @access public
 const getProduct = asyncHandler(async (req, res) => {
   const { id: productID } = req.params;
-  const product = await ProductModel.findById(productID);
+  const product = await ProductModel.findOne({ _id: productID });
 
   if (!product) {
     // Create a custom error --- This is when the formation of id is correct but the product with that id does not exist
     throw new NotFound(`No product was found with id ${productID}`);
   }
 
-  res.status(StatusCodes.OK).json({ product });
+  res.status(StatusCodes.OK).json(product);
 });
 
 module.exports = { getProducts, getProduct };
