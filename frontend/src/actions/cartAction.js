@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CART_ADD_ITEM } from "../constants/CartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/CartConstants";
 
 export const addToCart = (id, quantity) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`);
@@ -17,5 +17,13 @@ export const addToCart = (id, quantity) => async (dispatch, getState) => {
   });
 
   // change it to JSON.stringify because we can only save strings into local storage
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+// with the help of getState, we can access all of our items in the cart - we could add on to it, or remove from it
+
+export const removeFromCart = (id) => (dispatch, getState) => {
+  dispatch({ type: CART_REMOVE_ITEM, payload: id });
+
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };

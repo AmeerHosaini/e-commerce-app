@@ -11,7 +11,7 @@ import {
   Card,
   Form,
 } from "react-bootstrap";
-import { addToCart } from "../actions/cartAction";
+import { addToCart, removeFromCart } from "../actions/cartAction";
 
 const CartPage = () => {
   const { id } = useParams();
@@ -33,7 +33,9 @@ const CartPage = () => {
     }
   }, [dispatch, id, quantity]);
 
-  const removeFromCartHandler = (id) => {};
+  const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id));
+  };
 
   const checkoutHandler = () => {
     navigate("/login?redirect=shipping");
