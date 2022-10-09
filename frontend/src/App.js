@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProductPage from "./pages/ProductPage";
+import CartPage from "./pages/CartPage";
 
 const App = () => {
   return (
@@ -13,7 +14,9 @@ const App = () => {
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/product/:productID" element={<ProductPage />} />
+            <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/cart/:id" element={<CartPage />} />
           </Routes>
         </Container>
       </main>
