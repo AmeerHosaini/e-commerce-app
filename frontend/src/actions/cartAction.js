@@ -17,5 +17,5 @@ export const addToCart = (id, quantity) => async (dispatch, getState) => {
   });
 
   // change it to JSON.stringify because we can only save strings into local storage
-  localStorage.setItem("cartItems", JSON.stringify(getState.cart.cartItems));
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
 };
