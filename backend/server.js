@@ -3,6 +3,7 @@ const express = require("express");
 const connectDB = require("./config/db");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
+const userRoute = require("./routes/userRoute");
 const errorHandlerMiddleware = require("./middlewares/error_handler");
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/products", productRoute);
+app.use("/api/users", userRoute);
 
 // Error Handler Middleware --- NOTE: This must be included below the routes and every other middleware
 app.use(errorHandlerMiddleware);
