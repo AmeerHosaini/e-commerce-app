@@ -8,6 +8,8 @@ const errorHandlerMiddleware = require("./middlewares/error_handler");
 const app = express();
 // connectDB() with the previous setup
 
+app.use(express.json());
+
 // Routes
 app.use("/api/products", productRoute);
 
@@ -16,16 +18,17 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5000;
 
+app.listen(
+  port,
+  console.log(
+    `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`.yellow
+      .bold.underline
+  )
+);
+
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(
-      port,
-      console.log(
-        `Server is listening in ${process.env.NODE_ENV} mode on port ${port}`
-          .yellow.bold.underline
-      )
-    );
   } catch (error) {
     console.log(`Error: ${error.message}`.red.underline.bold);
   }
