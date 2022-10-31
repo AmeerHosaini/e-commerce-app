@@ -46,6 +46,7 @@ const authUser = asyncHandler(async (req, res) => {
   // create a token
   const token = user.createJwt();
 
+  // These are what we want to send through Api
   res.status(StatusCodes.OK).json({
     _id: user.id,
     name: user.name,
