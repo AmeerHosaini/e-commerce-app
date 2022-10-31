@@ -38,7 +38,13 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-UserSchema.pre("save", async function () {
+// Certain things happen when app runs. Before save, encrypt the password (middleware)
+UserSchema.pre("save", async function (next) {
+  // We need to make sure that when the user updates his name or email but not the password, we dont want to hash it
+  // We dont want this to run. Otherwise, we cannot login
+  if (!this.isModified("password")) {
+    next();
+  }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
