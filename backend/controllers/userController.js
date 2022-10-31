@@ -44,12 +44,14 @@ const authUser = asyncHandler(async (req, res) => {
   }
 
   // create a token
+  const token = user.createJwt();
+
   res.status(StatusCodes.OK).json({
     _id: user.id,
     name: user.name,
     email: user.email,
     isAdmin: user.isAdmin,
-    token: null,
+    token,
   });
 });
 
