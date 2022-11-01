@@ -6,17 +6,20 @@ import {
   productDetailsReducer,
 } from "./reducers/productReducers";
 import { cartReducer } from "./reducers/cartReducers";
-import { userLoginReducer } from "./reducers/userReducers";
+import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
+  // when we useSelect these, we will reference it by object key
+  // useSelect(state => state.userRegister)
+  // Then, we destructure the states that are in the userReducer from userRegister
+  userRegister: userRegisterReducer,
 });
 
 // We can get our cartItems from here, or tokens.
-
 const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
   : [];
