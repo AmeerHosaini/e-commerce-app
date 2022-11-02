@@ -74,6 +74,36 @@ const getUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Update user profile
+// @route Patch /api/users/profile
+// @access Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  // find the logged in user's by id if he wants to update his profile
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new NotFound("User was not found");
+  } else if (user) {
+    // if name wants to be updated, do it, otherwise, name stays the same
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+    const token = user.createJwt();
+
+    res.status(StatusCodes.OK).json({
+      _id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      token,
+    });
+  }
+});
+
 // @desc Register a new user
 // @route POST /api/users
 // @access Public
@@ -103,4 +133,4 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { authUser, getUserProfile, registerUser };
+module.exports = { authUser, getUserProfile, registerUser, updateUserProfile };
