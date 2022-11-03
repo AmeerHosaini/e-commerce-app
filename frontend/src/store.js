@@ -10,7 +10,10 @@ import {
   userLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
+  userUpdateProfileReducer,
 } from "./reducers/userReducers";
+
+// We must always add our reducers to the store
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -22,6 +25,7 @@ const reducer = combineReducers({
   // Then, we destructure the states that are in the userReducer from userRegister
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
+  userUpdateProfile: userUpdateProfileReducer,
 });
 
 // We can get our cartItems from here, or tokens.
