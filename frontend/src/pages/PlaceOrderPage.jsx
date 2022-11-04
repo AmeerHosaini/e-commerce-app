@@ -76,7 +76,7 @@ const PlaceOrderPage = () => {
                           />
                         </Col>
                         <Col>
-                          <Link to={`/product${cartItem.product}`}>
+                          <Link to={`/product/${cartItem.product}`}>
                             {cartItem.name}
                           </Link>
                         </Col>
