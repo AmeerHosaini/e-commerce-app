@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
@@ -14,7 +14,6 @@ import {
 import { addToCart, removeFromCart } from "../actions/cartAction";
 
 const CartPage = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
