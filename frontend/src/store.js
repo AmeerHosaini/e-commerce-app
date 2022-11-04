@@ -12,6 +12,7 @@ import {
   userDetailsReducer,
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
+import { orderCreateReducer } from "./reducers/orderReducers";
 
 // We must always add our reducers to the store
 
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  orderCreate: orderCreateReducer,
 });
 
 // We can get our cartItems from here, or tokens.
