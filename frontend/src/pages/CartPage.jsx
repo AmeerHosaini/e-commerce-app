@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
@@ -14,6 +14,7 @@ import {
 import { addToCart, removeFromCart } from "../actions/cartAction";
 
 const CartPage = () => {
+  const [loggedIn, setLoggedIn] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
@@ -25,7 +26,6 @@ const CartPage = () => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  console.log(cartItems);
 
   useEffect(() => {
     if (id) {
@@ -38,7 +38,8 @@ const CartPage = () => {
   };
 
   const checkoutHandler = () => {
-    navigate("/login?redirect=shipping");
+    // if user wants to go to shipping and not logged in, redirect him to login page first
+    navigate(`/login?redirect=shipping`);
   };
 
   return (
