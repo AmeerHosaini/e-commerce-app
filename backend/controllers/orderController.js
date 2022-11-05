@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const OrderModel = require("../models/OrderModel");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest } = require("../errors/index");
+const { BadRequest, NotFound } = require("../errors/index");
 
 // @desc Create new order
 // @route POST /api/orders
@@ -39,4 +39,21 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { addOrderItems };
+// @desc Get order by id
+// @route GET /api/orders/:id
+// @access Private
+const getOrderById = asyncHandler(async (req, res) => {
+  const { orderId: id } = req.params;
+  // In addition to the order id, we want the user's name and email address that is associated with the id
+  // populate will attach the fields we specify to the id
+  const order = await OrderModel.findById(id).populate("user", "name email");
+  if (!order) {
+    throw new NotFound("Order not found");
+  }
+
+  console.log(order);
+
+  res.status(StatusCodes.OK).json(order);
+});
+
+module.exports = { addOrderItems, getOrderById };
