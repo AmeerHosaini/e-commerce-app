@@ -43,16 +43,16 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @route GET /api/orders/:id
 // @access Private
 const getOrderById = asyncHandler(async (req, res) => {
-  const { orderId: id } = req.params;
+  const { id: orderId } = req.params;
   // In addition to the order id, we want the user's name and email address that is associated with the id
   // populate will attach the fields we specify to the id
-  const order = await OrderModel.findById(id).populate("user", "name email");
+  const order = await OrderModel.findOne({ _id: orderId }).populate(
+    "user",
+    "name email"
+  );
   if (!order) {
-    throw new NotFound("Order not found");
+    throw new NotFound(`No order was found with id ${productID}`);
   }
-
-  console.log(order);
-
   res.status(StatusCodes.OK).json(order);
 });
 
