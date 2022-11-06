@@ -12,16 +12,18 @@ const OrderDetailsPage = () => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
-  const addDecimals = (number) => {
-    return (Math.round(number * 100) / 100).toFixed(2);
-  };
-  // Calculate Prices
-  order.itemsPrice = addDecimals(
-    order.orderItems.reduce(
-      (acc, currentItem) => acc + currentItem.price * currentItem.quantity,
-      0
-    )
-  ); // 0 is the start of the accumulator
+  if (!loading) {
+    const addDecimals = (number) => {
+      return (Math.round(number * 100) / 100).toFixed(2);
+    };
+    // Calculate Prices
+    order.itemsPrice = addDecimals(
+      order.orderItems.reduce(
+        (acc, currentItem) => acc + currentItem.price * currentItem.quantity,
+        0
+      )
+    ); // 0 is the start of the accumulator
+  }
 
   useEffect(() => {
     dispatch(getOrderDetails(id));
