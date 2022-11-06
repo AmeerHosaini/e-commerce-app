@@ -80,4 +80,17 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(updatedOrder);
 });
 
-module.exports = { addOrderItems, getOrderById, updateOrderToPaid };
+// @desc Get logged in user orders
+// @route GET /api/orders/myOrders
+// @access Private
+const getLoggedInUserOrders = asyncHandler(async (req, res) => {
+  const orders = await OrderModel.find({ user: req.user._id });
+  res.status(StatusCodes.OK).json(orders);
+});
+
+module.exports = {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  getLoggedInUserOrders,
+};
