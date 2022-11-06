@@ -51,9 +51,33 @@ const getOrderById = asyncHandler(async (req, res) => {
     "name email"
   );
   if (!order) {
-    throw new NotFound(`No order was found with id ${productID}`);
+    throw new NotFound(`No order was found with id ${orderId}`);
   }
   res.status(StatusCodes.OK).json(order);
 });
 
-module.exports = { addOrderItems, getOrderById };
+// @desc Update order to pay
+// @route patch /api/orders/:id/pay
+// @access Private
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  const { id: orderId } = req.params;
+  const order = await OrderModel.findOne({ _id: orderId });
+  if (!order) {
+    throw new NotFound(`No order was found with id ${orderId}`);
+  }
+  order.isPaid = true;
+  order.paidAt = Date.now();
+  // This will come from paypal
+  order.paymentResult = {
+    id: req.body.id,
+    status: req.body.status,
+    update_time: req.body.update_time,
+    email_address: req.body.payer.email_address,
+  };
+
+  // We should save the fields to the database since we are updating them
+  const updatedOrder = await order.save();
+  res.status(StatusCodes.OK).json(updatedOrder);
+});
+
+module.exports = { addOrderItems, getOrderById, updateOrderToPaid };
