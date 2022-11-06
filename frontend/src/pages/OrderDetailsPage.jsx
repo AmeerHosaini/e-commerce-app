@@ -1,16 +1,25 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { getOrderDetails } from "../actions/orderActions";
+import { Link, useParams } from "react-router-dom";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { ORDER_PAY_RESET } from "../constants/orderConstant";
 
 const OrderDetailsPage = () => {
+  const [sdkReady, setSdkReady] = useState(false);
+
   const { id } = useParams();
   const dispatch = useDispatch();
+
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
+
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
 
   if (!loading) {
     const addDecimals = (number) => {
@@ -26,8 +35,40 @@ const OrderDetailsPage = () => {
   }
 
   useEffect(() => {
-    dispatch(getOrderDetails(id));
-  }, [dispatch, id]);
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+
+    if (!order || successPay) {
+      // We dont want to run into a non-ending loop from this useEffect - Once you pay, it will keep refreshing if you dont dispatch this
+      dispatch({ type: ORDER_PAY_RESET });
+      // This will load the order again but paid this time
+      // Or load the order even when it's not paid
+      // After payment is done successfully, orderPage will refresh and Paid message turns green
+      dispatch(getOrderDetails(id));
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPaypalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, [dispatch, id, successPay, order]);
+
+  // Success Payment Handler
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    // This will update the database to paid
+    dispatch(payOrder(id, paymentResult));
+  };
 
   // if it's loading, show loader. else if there is an error
   return loading ? (
@@ -139,6 +180,19 @@ const OrderDetailsPage = () => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {loadingPay && <Loader />}
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButton
+                      amount={order.totalPrice}
+                      onSuccess={successPaymentHandler}
+                    />
+                  )}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>
