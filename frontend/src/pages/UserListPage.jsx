@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listUsers } from "../actions/userActions";
+import { listUsers, deleteUser } from "../actions/userActions";
 
 const UserListPage = () => {
   const dispatch = useDispatch();
@@ -21,6 +21,9 @@ const UserListPage = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userDelete = useSelector((state) => state.userDelete);
+  const { success: successDelete } = userDelete;
+
   useEffect(() => {
     // if logged in and the logged in account is the admin
     if (userInfo && userInfo.isAdmin) {
@@ -28,9 +31,14 @@ const UserListPage = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo]);
+    // When admin deletes a user, we want the page to refresh and show the remaining users
+  }, [dispatch, navigate, userInfo, successDelete]);
 
-  const deleteHandler = (id) => {};
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you sure?")) {
+      dispatch(deleteUser(id));
+    }
+  };
 
   return (
     <>
