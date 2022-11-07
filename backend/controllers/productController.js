@@ -7,7 +7,7 @@ const { NotFound } = require("../errors/index");
 // @route /api/products
 // @access public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await ProductModel.find();
+  const products = await ProductModel.find({});
   res.status(StatusCodes.OK).json(products);
 });
 

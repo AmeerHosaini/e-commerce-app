@@ -23,8 +23,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-const isAdmin = (req, res, next) => {
-  // req.user --- if a user is logged in
+const admin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
@@ -32,4 +31,4 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, isAdmin };
+module.exports = { protect, admin };
