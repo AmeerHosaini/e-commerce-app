@@ -74,6 +74,35 @@ const getUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc Register a new user
+// @route POST /api/users
+// @access Public
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    throw new BadRequest("User already exists");
+  }
+  // if we dont have a middlware to hash our password, we have to hash it here before creating a document
+  const user = await User.create({ name, email, password });
+
+  if (!user) {
+    throw new BadRequest("Invalid user data");
+  }
+
+  const token = user.createJwt();
+
+  res.status(StatusCodes.CREATED).json({
+    _id: user.id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+    token,
+  });
+});
+
 // @desc Update user profile
 // @route Patch /api/users/profile
 // @access Private
@@ -104,33 +133,18 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc Register a new user
-// @route POST /api/users
-// @access Public
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
-
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    throw new BadRequest("User already exists");
-  }
-  // if we dont have a middlware to hash our password, we have to hash it here before creating a document
-  const user = await User.create({ name, email, password });
-
-  if (!user) {
-    throw new BadRequest("Invalid user data");
-  }
-
-  const token = user.createJwt();
-
-  res.status(StatusCodes.CREATED).json({
-    _id: user.id,
-    name: user.name,
-    email: user.email,
-    isAdmin: user.isAdmin,
-    token,
-  });
+// @desc Get all users
+// @route GET /api/users
+// @access Private/Admin
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find({});
+  res.status(StatusCodes.OK).json(users);
 });
 
-module.exports = { authUser, getUserProfile, registerUser, updateUserProfile };
+module.exports = {
+  authUser,
+  getUserProfile,
+  registerUser,
+  updateUserProfile,
+  getUsers,
+};
