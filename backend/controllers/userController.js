@@ -161,6 +161,42 @@ const deleteUser = asyncHandler(async (req, res) => {
   */
 });
 
+// @desc Get user by Id
+// @route GET /api/users/:id
+// @access Private/Admin
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select("-password");
+
+  if (!user) {
+    throw new NotFound(`The user with the id ${req.params.id} does not exist`);
+  }
+
+  res.status(StatusCodes.OK).json(user);
+});
+
+// @desc Update User
+// @route PATCH /api/users/:id
+// @access Private/Admin
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    throw new NotFound(`The user with the id ${req.params.id} does not exist`);
+  } else if (user) {
+    // if there is a name, set it to user
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin;
+
+    const updatedUser = await user.save();
+    res.status(StatusCodes.OK).json({
+      _id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  }
+});
+
 module.exports = {
   authUser,
   getUserProfile,
@@ -168,4 +204,6 @@ module.exports = {
   updateUserProfile,
   getUsers,
   deleteUser,
+  getUserById,
+  updateUser,
 };
