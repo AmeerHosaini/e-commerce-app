@@ -156,7 +156,9 @@ export const listUsers = () => async (dispatch, getState) => {
     } = getState();
 
     const config = {
-      Authorization: `Bearer ${userInfo.token}`,
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
     };
 
     const { data } = await axios.get("/api/users", config);
