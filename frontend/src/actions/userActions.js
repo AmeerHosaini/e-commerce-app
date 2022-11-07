@@ -17,6 +17,7 @@ import {
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_SUCCESS,
+  USER_LIST_RESET,
 } from "../constants/userConstant";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstant";
 
@@ -55,6 +56,10 @@ export const logout = () => (dispatch) => {
   // We use reset because when we logout from one profile and log back in with another profile, we will see his orders and profile information
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
+  // For UI Purpose: If a user can see the users list, which is available to the admin, we don't want that to happen
+  // Even though, navigate("/login") will solve the problem. But we are double checking
+  // Even if another user sees that list, he won't do anything because he does not have the token
+  dispatch({ type: USER_LIST_RESET });
 };
 
 export const register = (name, email, password) => async (dispatch) => {
