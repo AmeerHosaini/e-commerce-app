@@ -197,7 +197,7 @@ export const deleteUser = (userId) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.delete(`/api/users/${userId}`, config);
+    await axios.delete(`/api/users/${userId}`, config);
 
     // We won't send a payload, because we have a success state
     dispatch({ type: USER_DELETE_SUCCESS });
