@@ -2,18 +2,33 @@ import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listUsers } from "../actions/userActions";
 
 const UserListPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
 
+  /* Security Check - When we log out as admin, we will see the users list and if we reload, we get token null
+    2. When we login as a user and manually hit /admin/userlist route, we will get a not an admin custom error
+    we don't want even want the user to access that page
+  */
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    dispatch(listUsers());
-  }, [dispatch]);
+    // if logged in and the logged in account is the admin
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers());
+    } else {
+      navigate("/login");
+    }
+  }, [dispatch, navigate, userInfo]);
 
   const deleteHandler = (id) => {};
 
