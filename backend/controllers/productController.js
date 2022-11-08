@@ -12,9 +12,9 @@ const getProducts = asyncHandler(async (req, res) => {
 });
 
 // @desc Fetch a single product
-// @route /api/products/:id
+// @route GET /api/products/:id
 // @access public
-const getProduct = asyncHandler(async (req, res) => {
+const getProductById = asyncHandler(async (req, res) => {
   const { id: productID } = req.params;
   const product = await ProductModel.findOne({ _id: productID });
 
@@ -26,4 +26,22 @@ const getProduct = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(product);
 });
 
-module.exports = { getProducts, getProduct };
+// @desc delete a product
+// @route DELETE /api/products/:id
+// @access private/Admin
+const deleteProduct = asyncHandler(async (req, res) => {
+  /*
+    if (req.user._id === product.user._id) ---> Only admins that created the product can delete the product
+  */
+
+  const { id: productId } = req.params;
+  const product = await ProductModel.findById(productId);
+  if (product) {
+    await product.remove();
+    res.status(StatusCodes.OK).json({ message: "Product removed" });
+  } else {
+    throw new NotFound(`No product was found with id ${productId}`);
+  }
+});
+
+module.exports = { getProducts, getProductById, deleteProduct };
