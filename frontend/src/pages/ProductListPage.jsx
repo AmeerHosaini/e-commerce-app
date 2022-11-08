@@ -2,15 +2,19 @@ import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listProducts, deleteProduct } from "../actions/productAction";
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../actions/productAction";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 const ProductListPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
@@ -22,6 +26,14 @@ const ProductListPage = () => {
     error: errorDelete,
   } = productDelete;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate;
+
   /* Security Check - When we log out as admin, we will see the users list and if we reload, we get token null
     2. When we login as a user and manually hit /admin/userlist route, we will get a not an admin custom error
     we don't want even want the user to access that page
@@ -30,14 +42,31 @@ const ProductListPage = () => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    // if logged in and the logged in account is the admin
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+    // // if logged in and the logged in account is the admin
+    // if (userInfo && userInfo.isAdmin) {
+    //   dispatch(listProducts());
+    // } else {
+    //   navigate("/login");
+    // }
+    // When admin deletes a user, we want the page to refresh and show the remaining users
+    if (!userInfo.isAdmin) {
       navigate("/login");
     }
-    // When admin deletes a user, we want the page to refresh and show the remaining users
-  }, [dispatch, navigate, userInfo, successDelete]);
+
+    if (successCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    successDelete,
+    successCreate,
+    createdProduct,
+  ]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
@@ -45,7 +74,9 @@ const ProductListPage = () => {
     }
   };
 
-  const createProductHandler = (product) => {};
+  const createProductHandler = () => {
+    dispatch(createProduct());
+  };
 
   return (
     <>
@@ -61,6 +92,8 @@ const ProductListPage = () => {
       </Row>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
