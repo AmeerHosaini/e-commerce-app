@@ -5,14 +5,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { listProducts } from "../actions/productAction";
+import { listProducts, deleteProduct } from "../actions/productAction";
 
 const ProductListPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const {
+    loading: loadingDelete,
+    success: successDelete,
+    error: errorDelete,
+  } = productDelete;
 
   /* Security Check - When we log out as admin, we will see the users list and if we reload, we get token null
     2. When we login as a user and manually hit /admin/userlist route, we will get a not an admin custom error
@@ -29,11 +37,11 @@ const ProductListPage = () => {
       navigate("/login");
     }
     // When admin deletes a user, we want the page to refresh and show the remaining users
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, successDelete]);
 
   const deleteHandler = (id) => {
     if (window.confirm("Are you sure?")) {
-      // Delete Products
+      dispatch(deleteProduct(id));
     }
   };
 
@@ -51,6 +59,8 @@ const ProductListPage = () => {
           </Button>
         </Col>
       </Row>
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
