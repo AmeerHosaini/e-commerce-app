@@ -44,4 +44,53 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { getProducts, getProductById, deleteProduct };
+// @desc create a product
+// @route POST /api/products/
+// @access private/Admin
+const createProduct = asyncHandler(async (req, res) => {
+  const product = new ProductModel({
+    name: "Sample name",
+    price: 0,
+    user: req.user._id,
+    image: "/images/sample.jpg",
+    brand: "Sample brand",
+    category: "Sample category",
+    countInStock: 0,
+    numReviews: 0,
+    description: "Sample description",
+  });
+
+  const createdProduct = await product.save();
+  res.status(StatusCodes.CREATED).json(createdProduct);
+});
+
+// @desc Update a product
+// @route PATCH /api/products/:id
+// @access private/Admin
+const updateProduct = asyncHandler(async (req, res) => {
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
+  const product = await ProductModel.findById(req.params.id);
+  if (!product) {
+    throw new NotFound(`No product was found with id ${req.params.id}`);
+  }
+
+  product.name = name;
+  product.price = price;
+  product.description = description;
+  product.image = image;
+  product.brand = brand;
+  product.category = category;
+  product.countInStock = countInStock;
+
+  const updatedProduct = await product.save();
+  res.status(StatusCodes.OK).json(updatedProduct);
+});
+
+module.exports = {
+  getProducts,
+  getProductById,
+  deleteProduct,
+  createProduct,
+  updateProduct,
+};
