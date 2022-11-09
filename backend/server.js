@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const path = require("path");
 const connectDB = require("./config/db");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
@@ -26,7 +25,8 @@ app.get("/api/config/paypal", (req, res) => {
 
 // Without this, our upload folder will be restricted. We need to make it available to the browser by making it static
 // -- path is a node js module to work with files - join() we want to join different fragments of folder - __dirname points to the current directory
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+app.use("/uploads", express.static("uploads"));
 
 // Error Handler Middleware --- NOTE: This must be included below the routes and every other middleware
 app.use(errorHandlerMiddleware);
