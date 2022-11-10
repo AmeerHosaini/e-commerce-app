@@ -88,9 +88,19 @@ const getLoggedInUserOrders = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(orders);
 });
 
+// @desc Get all orders
+// @route GET /api/orders
+// @access Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  // From the user that is associated to order, get id and name
+  const orders = await OrderModel.find({}).populate("user", "id name");
+  res.status(StatusCodes.OK).json(orders);
+});
+
 module.exports = {
   addOrderItems,
   getOrderById,
   updateOrderToPaid,
   getLoggedInUserOrders,
+  getOrders,
 };
