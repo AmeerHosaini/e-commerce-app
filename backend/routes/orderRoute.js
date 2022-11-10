@@ -15,6 +15,6 @@ router.route("/myOrders").get(protect, getLoggedInUserOrders);
 // This must always be at the bottom - if we set another route as /route, it will look at it as an id
 router.route("/:id").get(protect, getOrderById);
 router.route("/:id/pay").patch(protect, updateOrderToPaid);
-router.route("/:id/pay").patch(protect, admin, updateOrderToDelivered);
+router.route("/:id/deliver").patch(protect, admin, updateOrderToDelivered);
 
 module.exports = router;

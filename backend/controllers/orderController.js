@@ -84,7 +84,8 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route patch /api/orders/:id/deliver
 // @access Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-  const order = await OrderModel.find(req.params.id);
+  const { id: orderId } = req.params;
+  const order = await OrderModel.findOne({ _id: orderId });
   if (!order) {
     throw new NotFound(`No order was found with id ${req.params.id}`);
   }

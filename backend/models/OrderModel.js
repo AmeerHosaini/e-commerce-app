@@ -85,7 +85,7 @@ const OrderSchema = new mongoose.Schema(
     },
 
     isDelivered: {
-      type: Date,
+      type: Boolean,
     },
 
     deliveredAt: {
