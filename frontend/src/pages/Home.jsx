@@ -2,6 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productAction";
+import { useParams } from "react-router-dom";
 import ProductPage from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -29,12 +30,14 @@ const Home = () => {
 
   // We are gonna make the get request through our action -- useSelector(uses a part of a state)
   const dispatch = useDispatch();
+  const { keyword } = useParams();
+
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
+    dispatch(listProducts(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <>
