@@ -26,6 +26,7 @@ const App = () => {
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search/:keyword" element={<Home />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/cart/:id" element={<CartPage />} />
@@ -38,12 +39,12 @@ const App = () => {
             <Route path="/order/:id" element={<OrderDetailsPage />} />
             <Route path="/admin/userlist" element={<UserListPage />} />
             <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
-            <Route path="/admin/productList" element={<ProductListPage />} />
+            <Route path="/admin/productlist" element={<ProductListPage />} />
             <Route
               path="/admin/product/:id/edit"
               element={<ProductEditPage />}
             />
-            <Route path="/admin/orderList" element={<OrderListPage />} />
+            <Route path="/admin/orderlist" element={<OrderListPage />} />
           </Routes>
         </Container>
       </main>
