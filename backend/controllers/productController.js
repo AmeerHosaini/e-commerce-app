@@ -1,7 +1,7 @@
 const ProductModel = require("../models/ProductModel");
 const asyncHandler = require("express-async-handler");
 const { StatusCodes } = require("http-status-codes");
-const { NotFound } = require("../errors/index");
+const { NotFound, BadRequest } = require("../errors/index");
 
 // @desc Fetch All Products
 // @route /api/products
@@ -87,10 +87,52 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(updatedProduct);
 });
 
+// @desc create new review
+// @route POST /api/products/:id/reviews
+// @access private
+const createProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const product = await ProductModel.findById(req.params.id);
+
+  if (!product) {
+    throw new NotFound(`No product found with id ${req.params.id}`);
+  }
+
+  // review.user is what we added to modal
+  const alreadyReviewed = product.reviews.find(
+    (review) => review.user.toString() === req.user._id.toString()
+  );
+
+  if (alreadyReviewed) {
+    throw new BadRequest("Product already reviewed");
+  }
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id,
+  };
+
+  product.reviews.push(review);
+
+  product.numReviews = product.reviews.length;
+
+  // average rating
+  product.rating =
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    product.reviews.length;
+
+  await product.save();
+  res.status(StatusCodes.CREATED).json({ message: "Review added" });
+});
+
 module.exports = {
   getProducts,
   getProductById,
   deleteProduct,
   createProduct,
   updateProduct,
+  createProductReview,
 };
