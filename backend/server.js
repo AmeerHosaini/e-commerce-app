@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
+const morgan = require("morgan");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
 const userRoute = require("./routes/userRoute");
@@ -10,6 +11,11 @@ const errorHandlerMiddleware = require("./middlewares/error_handler");
 
 const app = express();
 // connectDB() with the previous setup
+
+// Logger
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 app.use(express.json());
 
