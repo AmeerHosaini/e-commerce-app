@@ -7,7 +7,19 @@ const { NotFound, BadRequest } = require("../errors/index");
 // @route /api/products
 // @access public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await ProductModel.find({});
+  // match the keyword to the name of the product
+  // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          // case insensitive
+          $options: "i",
+        },
+      }
+    : {};
+
+  const products = await ProductModel.find({ ...keyword });
   res.status(StatusCodes.OK).json(products);
 });
 
