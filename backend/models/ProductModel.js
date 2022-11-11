@@ -17,6 +17,12 @@ const ReviewSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // we assocaited a user to check if a user already has a review
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
