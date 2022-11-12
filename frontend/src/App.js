@@ -46,6 +46,10 @@ const App = () => {
             <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
             <Route path="/admin/productlist" element={<ProductListPage />} />
             <Route
+              path="/admin/productlist/:pageNumber"
+              element={<ProductListPage />}
+            />
+            <Route
               path="/admin/product/:id/edit"
               element={<ProductEditPage />}
             />
