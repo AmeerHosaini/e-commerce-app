@@ -7,20 +7,28 @@ const { NotFound, BadRequest } = require("../errors/index");
 // @route /api/products
 // @access public
 const getProducts = asyncHandler(async (req, res) => {
-  // match the keyword to the name of the product
-  // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
+  // // match the keyword to the name of the product
+  // // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
+  const pageSize = 3;
+  const page = Number(req.query.pageNumber) || 1;
+
   const keyword = req.query.keyword
     ? {
         name: {
           $regex: req.query.keyword,
-          // case insensitive
           $options: "i",
         },
       }
     : {};
 
-  const products = await ProductModel.find({ ...keyword });
-  res.status(StatusCodes.OK).json(products);
+  const count = await ProductModel.countDocuments({ ...keyword });
+  const products = await ProductModel.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res
+    .status(StatusCodes.OK)
+    .json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc Fetch a single product
