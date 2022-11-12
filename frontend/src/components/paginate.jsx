@@ -9,13 +9,15 @@ const Paginate = ({ pages, page, isAdmin = false, keyword = "" }) => {
           <LinkContainer
             key={pageNumber + 1}
             to={
-              keyword
-                ? `/search/${keyword}/page/${pageNumber + 1}`
-                : `/page/${pageNumber + 1}`
+              !isAdmin
+                ? keyword
+                  ? `/search/${keyword}/page/${pageNumber + 1}`
+                  : `/page/${pageNumber + 1}`
+                : `/admin/productlist/${pageNumber + 1}`
             }
           >
             <Pagination.Item active={pageNumber + 1 === page}>
-              {pageNumber}
+              {pageNumber + 1}
             </Pagination.Item>
           </LinkContainer>
         ))}
