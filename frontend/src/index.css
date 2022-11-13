@@ -7,3 +7,30 @@ main {
 .rating span {
   margin: 0.1rem
 }
+
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active {
+  display: flex;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 0;
+  margin-bottom: 25px;
+}
+
+.carousel-caption h2 {
+  color: #fff;
+  
+}
+
+.carousel img {
+  height: 350px;
+  padding-top: 30px;
+  margin: 60px 0;
+}
+
+.carousel a {
+  margin: 0 auto;
+}
