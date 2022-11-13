@@ -7,6 +7,7 @@ import ProductPage from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Paginate from "../components/paginate";
+import ProductCarousel from "../components/ProductCarousel";
 
 const Home = () => {
   /* const [products, setProducts] = useState([]);
@@ -45,7 +46,8 @@ const Home = () => {
 
   return (
     <>
-      <h1>Latest Products</h1>
+      {!keyword && <ProductCarousel />}
+      <h1 className="mt-3">Latest Products</h1>
       {loading ? (
         <Loader />
       ) : error ? (
