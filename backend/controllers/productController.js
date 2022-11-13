@@ -148,6 +148,15 @@ const createProductReview = asyncHandler(async (req, res) => {
   res.status(StatusCodes.CREATED).json({ message: "Review added" });
 });
 
+// @desc Get top rated products
+// @route GET /api/product/top
+// @access Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  // sort the products by ascending order
+  const products = await ProductModel.find({}).sort({ rating: -1 }).limit(3);
+  res.status(StatusCodes.OK).json(products);
+});
+
 module.exports = {
   getProducts,
   getProductById,
@@ -155,4 +164,5 @@ module.exports = {
   createProduct,
   updateProduct,
   createProductReview,
+  getTopProducts,
 };
