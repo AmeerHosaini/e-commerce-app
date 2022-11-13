@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
+const path = require("path");
 const morgan = require("morgan");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
@@ -28,6 +29,20 @@ app.use("/api/upload", uploadRoute);
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });
+
+// const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("/frontend/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve("frontend", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running....");
+  });
+}
 
 // Without this, our upload folder will be restricted. We need to make it available to the browser by making it static
 // -- path is a node js module to work with files - join() we want to join different fragments of folder - __dirname points to the current directory
