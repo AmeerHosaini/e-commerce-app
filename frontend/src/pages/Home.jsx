@@ -2,7 +2,8 @@ import { Col, Row } from "react-bootstrap";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productAction";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import Meta from "../components/Meta";
 import ProductPage from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -46,7 +47,14 @@ const Home = () => {
 
   return (
     <>
-      {!keyword && <ProductCarousel />}
+      <Meta />
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to="/" className="btn btn-dark">
+          Go Back
+        </Link>
+      )}
       <h1 className="mt-3">Latest Products</h1>
       {loading ? (
         <Loader />
