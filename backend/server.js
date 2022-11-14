@@ -1,8 +1,14 @@
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
-const path = require("path");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+const cors = require("cors");
 const colors = require("colors");
 const productRoute = require("./routes/productRoute");
 const userRoute = require("./routes/userRoute");
@@ -18,9 +24,39 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+// body parser
 app.use(express.json());
 
-// Routes
+// Nested Objects
+app.use(express.urlencoded({ extended: true }));
+
+// Cookie parser
+app.use(cookieParser());
+
+// Sanitize Data
+app.use(mongoSanitize());
+
+// Set security headers
+app.use(helmet());
+
+// Prevent Xss Attacks
+app.use(xss());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins
+  max: 100,
+});
+
+app.use(limiter);
+
+// Prevent http params pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
+
+// Route middlewares mounted to their routes
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
 app.use("/api/orders", orderRoute);
@@ -29,20 +65,6 @@ app.use("/api/upload", uploadRoute);
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });
-
-// const __dirname = path.resolve();
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("/frontend/build"));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve("frontend", "build", "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running....");
-  });
-}
 
 // Without this, our upload folder will be restricted. We need to make it available to the browser by making it static
 // -- path is a node js module to work with files - join() we want to join different fragments of folder - __dirname points to the current directory
