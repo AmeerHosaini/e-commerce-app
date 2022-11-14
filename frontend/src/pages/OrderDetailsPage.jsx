@@ -79,7 +79,7 @@ const OrderDetailsPage = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, id, successPay, order, successDeliver]);
+  }, [dispatch, id, successPay, order, successDeliver, userInfo, navigate]);
 
   // Success Payment Handler
   const successPaymentHandler = (paymentResult) => {
