@@ -56,6 +56,10 @@ app.use(hpp());
 // Enable CORS
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("Api is running...");
+});
+
 // Route middlewares mounted to their routes
 app.use("/api/products", productRoute);
 app.use("/api/users", userRoute);
