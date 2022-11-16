@@ -4,6 +4,7 @@ import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/userActions";
 import SearchBox from "./SearchBox";
+import ThemeBtn from "./ThemeBtn";
 
 const Header = () => {
   // this gets userLogin part of our state
@@ -64,6 +65,7 @@ const Header = () => {
                   </LinkContainer>
                 </NavDropdown>
               )}
+              <ThemeBtn />
             </Nav>
           </Navbar.Collapse>
         </Container>

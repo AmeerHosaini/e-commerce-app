@@ -1,3 +1,24 @@
+:root {
+  --clr-bcg: #fff;
+  --clr-font: #282c35;
+}
+
+.dark-theme {
+  --clr-bcg: #282c35;
+  --clr-font: #fff;
+}
+
+.light-theme {
+  --clr-bcg: #fff;
+  --clr-font: #282c35;
+}
+
+body {
+  background: var(--clr-bcg);
+  color: var(--clr-font);
+  transition: all 0.3s linear;
+}
+
 main {
   min-height: 90vh;
   /* display: grid;
@@ -39,4 +60,14 @@ footer {
   padding: 2rem;
   color: #fff;
   font-size: 1.2rem;
+}
+
+/* Theme btn */
+.theme-btn {
+  display: inline-block;
+  font-size: 1rem;
+  background-color: transparent;
+  border: transparent;
+  outline: transparent;
+  color: var(--clr-font);
 }
