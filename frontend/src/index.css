@@ -40,3 +40,21 @@ footer {
   color: #fff;
   font-size: 1.2rem;
 }
+
+.error {
+	width: 100%;
+	height: auto;
+	margin: 50px auto;
+	text-align: center;
+	margin-bottom: 0;
+}
+
+.error h1 {
+  font-size: 200px;
+}
+
+.error p {
+  font-size: 24px;
+  margin-bottom: 2rem;
+}
+

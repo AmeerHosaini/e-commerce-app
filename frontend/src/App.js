@@ -17,6 +17,7 @@ import UserEditPage from "./pages/UserEditPage";
 import ProductListPage from "./pages/ProductListPage";
 import ProductEditPage from "./pages/ProductEditPage";
 import OrderListPage from "./pages/OrderListPage";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
               element={<ProductEditPage />}
             />
             <Route path="/admin/orderlist" element={<OrderListPage />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Container>
       </main>
