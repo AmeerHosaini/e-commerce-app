@@ -63,6 +63,10 @@ const cartItemsFromStorage = localStorage.getItem("cartItems")
   ? JSON.parse(localStorage.getItem("cartItems"))
   : [];
 
+const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
+  ? JSON.parse(localStorage.getItem("paymentMethod"))
+  : [];
+
 // We want to show our initial user info when the app loads
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
@@ -78,6 +82,7 @@ const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
+    paymentMethod: paymentMethodFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
 };
