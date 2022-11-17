@@ -25,7 +25,8 @@ const LoginPage = () => {
   useEffect(() => {
     // if user is not logged in, it will be null
     if (userInfo) {
-      navigate(redirect);
+      // navigate(redirect) --- redirects to '/login/shipping', and it needs a correspondent route in App.js, Why?
+      navigate("/shipping");
     }
   }, [userInfo, redirect, navigate]);
 
