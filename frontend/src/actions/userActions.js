@@ -66,6 +66,7 @@ export const logout = () => (dispatch) => {
   // Even though, navigate("/login") will solve the problem. But we are double checking
   // Even if another user sees that list, he won't do anything because he does not have the token
   dispatch({ type: USER_LIST_RESET });
+  document.location.href = "/login";
 };
 
 export const register = (name, email, password) => async (dispatch) => {
