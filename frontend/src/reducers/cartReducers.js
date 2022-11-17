@@ -36,7 +36,6 @@ export const cartReducer = (
           (item) => item.product !== action.payload
         ),
       };
-
     case CART_SAVE_SHIPPING_ADDRESS:
       return {
         ...state,
@@ -48,6 +47,7 @@ export const cartReducer = (
         ...state,
         paymentMethod: action.payload,
       };
+
     default:
       return state;
   }

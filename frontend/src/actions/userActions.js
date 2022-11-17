@@ -26,6 +26,11 @@ import {
   USER_UPDATE_SUCCESS,
 } from "../constants/userConstant";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstant";
+import {
+  CART_RESET_ITEM,
+  CART_SAVE_PAYMENT_METHOD_RESET,
+  CART_SAVE_SHIPPING_ADDRESS_RESET,
+} from "../constants/CartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -58,6 +63,9 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   // Remove the user from localstorage first
   localStorage.removeItem("userInfo");
+  localStorage.removeItem("cartItems");
+  localStorage.removeItem("paymentMethod");
+  localStorage.removeItem("shippingAddress");
   dispatch({ type: USER_LOGOUT });
   // We use reset because when we logout from one profile and log back in with another profile, we will see his orders and profile information
   dispatch({ type: USER_DETAILS_RESET });
