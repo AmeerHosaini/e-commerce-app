@@ -10,10 +10,11 @@ import { login } from "../actions/userActions";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const location = useLocation();
   const navigate = useNavigate();
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+
+  const { search } = useLocation();
+  const redirectInUrl = new URLSearchParams(search).get("redirect");
+  const redirect = redirectInUrl ? redirectInUrl : "/";
 
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
