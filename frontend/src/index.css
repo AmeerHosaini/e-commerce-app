@@ -1,3 +1,47 @@
+:root {
+  --clr-bcg: #fff;
+  --clr-font: #282c35;
+  --clr-dark-bootstrap: #343a40;
+}
+
+.dark {
+  --clr-bcg: #282c35;
+  --clr-font: #fff;
+  --clr-bcg-carousel: rgb(58, 58, 58);
+  --clr-card: var(--clr-dark-bootstrap);
+}
+
+.light {
+  --clr-bcg: #fff;
+  --clr-font: #282c35;
+  --clr-bcg-carousel: rgb(58, 58, 58);
+  --clr-card: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: var(--clr-bcg);
+  color: var(--clr-font);
+  line-height: 1.5;
+  font-size: 0.875rem;
+  transition: all 0.3s linear;
+}
+
+h1, h2, h3, h4, h5, h6, p, a, th, tr, td {
+  color: var(--clr-font);
+}
+
+a:hover {
+  color: var(--clr-font);
+}
+
 main {
   min-height: 90vh;
   /* display: grid;
@@ -8,10 +52,37 @@ main {
   margin: 0.1rem
 }
 
+.carousel {
+  position: relative;
+}
+
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {
   display: flex;
+}
+
+.carousel .visually-hidden{
+  display: none;
+}
+
+.carousel-control-next, .carousel-control-prev {
+  background-color: var(--clr-bcg-carousel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.carousel-indicators button{
+  width: 30px;
+  height: 7px;
+  margin-right: 3px;
+  background-color: var(--clr-font)
 }
 
 .carousel-caption {
@@ -21,12 +92,12 @@ main {
 }
 
 .carousel-caption h2 {
-  color: #fff;
-  
+  color: var(--clr-font);
 }
 
 .carousel img {
   height: 350px;
+  width: 600px;
   padding-top: 30px;
   margin: 60px 0;
 }
@@ -35,9 +106,38 @@ main {
   margin: 0 auto;
 }
 
+.list-group-item, .list-group-item a {
+  background-color: var(--clr-bcg);
+  color: var(--clr-font);
+}
+
+.home-product{
+  background: var(--clr-card);
+}
+
+.pagination .page-link{
+  background-color: var(--clr-card);
+  color: var(--clr-font);
+}
+
+.pagination .visually-hidden {
+  display: none;
+}
+
+.dropdown-menu {
+  background-color: var(--clr-bcg);
+}
+
+.dropdown-menu .dropdown-item{
+  color: var(--clr-font);
+}
+
+.dropdown-menu .dropdown-item:hover {
+  color: #282c35;
+}
+
 footer {
   padding: 2rem;
-  color: #fff;
   font-size: 1.2rem;
 }
 
