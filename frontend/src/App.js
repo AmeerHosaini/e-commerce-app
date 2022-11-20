@@ -1,6 +1,7 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProductPage from "./pages/ProductPage";
@@ -19,22 +20,52 @@ import ProductEditPage from "./pages/ProductEditPage";
 import OrderListPage from "./pages/OrderListPage";
 
 const App = () => {
+  const lightTheme = "light";
+  const darkTheme = "dark";
+
+  const getLocalStorageTheme = () => {
+    let theme = lightTheme;
+    if (localStorage.getItem("theme")) {
+      theme = localStorage.getItem("theme");
+    }
+    return theme;
+  };
+
+  const [theme, setTheme] = useState(getLocalStorageTheme());
+
+  const toggleTheme = () => {
+    if (theme === lightTheme) {
+      setTheme(darkTheme);
+    } else {
+      setTheme(lightTheme);
+    }
+  };
+
+  useEffect(() => {
+    // update the localstorage when theme state is changed
+    document.documentElement.className = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
     <Router>
-      <Header />
+      <Header theme={theme} toggleTheme={toggleTheme} />
       <main className="py-3">
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/search/:keyword" element={<Home />} />
-            <Route path="/page/:pageNumber" element={<Home />} />
+            <Route path="/search/:keyword" element={<Home theme={theme} />} />
+            <Route path="/page/:pageNumber" element={<Home theme={theme} />} />
             <Route
               path="/search/:keyword/page/:pageNumber"
-              element={<Home />}
+              element={<Home theme={theme} />}
             />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/cart/:id" element={<CartPage />} />
+            <Route
+              path="/product/:id"
+              element={<ProductPage theme={theme} />}
+            />
+            <Route path="/cart" element={<CartPage theme={theme} />} />
+            <Route path="/cart/:id" element={<CartPage theme={theme} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<ProfilePage />} />
@@ -57,7 +88,7 @@ const App = () => {
           </Routes>
         </Container>
       </main>
-      <Footer />
+      <Footer theme={theme} />
     </Router>
   );
 };

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productAction";
 import { useParams, Link } from "react-router-dom";
 import Meta from "../components/Meta";
-import ProductPage from "../components/Product";
+import Product from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Paginate from "../components/paginate";
@@ -51,11 +51,11 @@ const Home = () => {
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to="/" className="btn btn-dark">
+        <Link to="/" className={`btn btn-dark`}>
           Go Back
         </Link>
       )}
-      <h1 className="mt-3">Latest Products</h1>
+      <h1 className={`mt-3`}>Latest Products</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -65,7 +65,7 @@ const Home = () => {
           <Row>
             {products.map((product) => (
               <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <ProductPage product={product} />
+                <Product product={product} />
               </Col>
             ))}
           </Row>
