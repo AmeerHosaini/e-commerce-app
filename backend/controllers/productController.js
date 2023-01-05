@@ -9,23 +9,86 @@ const { NotFound, BadRequest } = require("../errors/index");
 const getProducts = asyncHandler(async (req, res) => {
   // // match the keyword to the name of the product
   // // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
+  // const pageSize = 3;
+  // const page = Number(req.query.pageNumber) || 1;
+
+  // const keyword = req.query.keyword
+  //   ? {
+  //       name: {
+  //         $regex: req.query.keyword,
+  //         $options: "i",
+  //       },
+  //     }
+  //   : {};
+
+  // const count = await ProductModel.countDocuments({ ...keyword });
+  // const products = await ProductModel.find({ ...keyword })
+  //   .limit(pageSize)
+  //   .skip(pageSize * (page - 1));
+
+  // res
+  //   .status(StatusCodes.OK)
+  //   .json({ products, page, pages: Math.ceil(count / pageSize) });
+
+  let query;
+  const { name, sort, numericFilter } = req.query;
+  const queryObject = {};
+
+  // search
+  if (name) {
+    queryObject.name = { $regex: name, $options: "i" };
+  }
+
+  query = ProductModel.find(queryObject);
+
+  // sort
+  if (sort) {
+    const sortByArr = sort.split(",");
+    sortByArr.forEach((value) => {
+      let order;
+      if (value[0] === "-") {
+        order = "descending";
+      } else {
+        order = "ascending";
+      }
+    });
+    const sortByStr = sortByArr.join(" ");
+    query = query.sort(sortByStr);
+  } else {
+    query = query.sort("-price");
+  }
+
+  // Pagination
   const pageSize = 3;
   const page = Number(req.query.pageNumber) || 1;
+  const skip = (page - 1) * pageSize;
+  query = query.skip(skip).limit(pageSize);
 
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
+  // Filter
+  if (numericFilter) {
+    const operatorMap = {
+      ">": "$gt",
+      ">=": "$gte",
+      "=": "$eq",
+      "<": "$lt",
+      "<=": "$lte",
+    };
+    const regExp = /\b(<|>|>=|=|<|<=)\b/g;
+    let filters = numericFilter.replace(
+      regExp,
+      (match) => `-${operatorMap[match]}-`
+    );
+    const options = ["price", "rating"];
+    filters = filters.split(",").forEach((item) => {
+      const [field, operator, value] = item.split("-");
+      if (options.includes(field)) {
+        queryObject[field] = { [operator]: Number(value) };
       }
-    : {};
+    });
+  }
 
-  const count = await ProductModel.countDocuments({ ...keyword });
-  const products = await ProductModel.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
+  const count = await ProductModel.countDocuments({ ...name });
+  const products = await query;
   res
     .status(StatusCodes.OK)
     .json({ products, page, pages: Math.ceil(count / pageSize) });
