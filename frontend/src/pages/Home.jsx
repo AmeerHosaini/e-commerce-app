@@ -1,4 +1,18 @@
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
+import {
+  Grid,
+  Paper,
+  styled,
+  Typography,
+  Box,
+  Container,
+  Slider,
+  TextField,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productAction";
@@ -9,6 +23,36 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Paginate from "../components/paginate";
 import ProductCarousel from "../components/ProductCarousel";
+
+const StyledPaper = styled(Paper, {
+  name: "StyledPaper",
+  slot: "Wrapper",
+})({
+  margin: "2rem 0",
+  padding: "1rem",
+});
+
+const Filters = styled(Box, {
+  name: "Filters",
+  slot: "Wrapper",
+})({
+  padding: "0 1.5rem",
+});
+
+const PriceInputs = styled(Box, {
+  name: "PriceInputs",
+  slot: "Wrapper",
+})({
+  display: "flex",
+  justifyContent: "space-between",
+});
+
+const StyledContainer = styled(Container, {
+  name: "StyledContainer",
+  slot: "Wrapper",
+})({
+  marginTop: 20,
+});
 
 const Home = () => {
   /* const [products, setProducts] = useState([]);
@@ -55,6 +99,60 @@ const Home = () => {
           Go Back
         </Link>
       )}
+      {/* Filtering */}
+      <StyledPaper>
+        <Grid container>
+          <Grid item xs={12} sm={6}>
+            <Typography gutterBottom>Filters</Typography>
+            <Filters>
+              <Slider
+                min={0}
+                max={1000}
+                disabled={loading}
+                valueLabelDisplay="auto"
+              />
+              <PriceInputs>
+                <TextField
+                  size="small"
+                  id="lower"
+                  label="Min price"
+                  variant="outlined"
+                  type="number"
+                  disabled={loading}
+                />
+                <TextField
+                  size="small"
+                  id="upper"
+                  label="Max price"
+                  variant="outlined"
+                  type="number"
+                  disabled={loading}
+                />
+              </PriceInputs>
+            </Filters>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography gutterBottom>Sort By</Typography>
+            <FormControl component="fieldset">
+              <RadioGroup aria-label="price-order" name="price-order">
+                <FormControlLabel
+                  disabled={loading}
+                  control={<Radio />}
+                  value="descending"
+                  label="Price: Highest - Lowest"
+                />
+                <FormControlLabel
+                  disabled={loading}
+                  control={<Radio />}
+                  value="ascending"
+                  label="Price: Lowest - Highest"
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Button className="btn btn-dark">Clear All</Button>
+      </StyledPaper>
       <h1 className={`mt-3`}>Latest Products</h1>
       {loading ? (
         <Loader />
