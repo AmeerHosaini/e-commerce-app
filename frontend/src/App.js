@@ -56,6 +56,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search/:keyword" element={<Home theme={theme} />} />
+            <Route path="/filter/:price" element={<Home theme={theme} />} />
             <Route path="/page/:pageNumber" element={<Home theme={theme} />} />
             <Route
               path="/search/:keyword/page/:pageNumber"

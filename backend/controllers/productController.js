@@ -31,19 +31,25 @@ const getProducts = asyncHandler(async (req, res) => {
   //   .json({ products, page, pages: Math.ceil(count / pageSize) });
 
   let query;
-  const { name, sort, numericFilter } = req.query;
-  const queryObject = {};
+  const reqQuery = { ...req.query };
 
   // search
-  if (name) {
-    queryObject.name = { $regex: name, $options: "i" };
+  if (req.query.name) {
+    reqQuery.name = { $regex: req.query.name, $options: "i" };
   }
 
-  query = ProductModel.find(queryObject);
+  // Filter
+  let queryString = JSON.stringify(reqQuery);
+  queryString = queryString.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
+  query = ProductModel.find(JSON.parse(queryString));
 
   // sort
-  if (sort) {
-    const sortByArr = sort.split(",");
+  if (req.query.sort) {
+    const sortByArr = req.query.sort.split(",");
     sortByArr.forEach((value) => {
       let order;
       if (value[0] === "-") {
@@ -59,35 +65,12 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   // Pagination
-  const pageSize = 3;
+  const pageSize = 4;
   const page = Number(req.query.pageNumber) || 1;
   const skip = (page - 1) * pageSize;
   query = query.skip(skip).limit(pageSize);
 
-  // Filter
-  if (numericFilter) {
-    const operatorMap = {
-      ">": "$gt",
-      ">=": "$gte",
-      "=": "$eq",
-      "<": "$lt",
-      "<=": "$lte",
-    };
-    const regExp = /\b(<|>|>=|=|<|<=)\b/g;
-    let filters = numericFilter.replace(
-      regExp,
-      (match) => `-${operatorMap[match]}-`
-    );
-    const options = ["price", "rating"];
-    filters = filters.split(",").forEach((item) => {
-      const [field, operator, value] = item.split("-");
-      if (options.includes(field)) {
-        queryObject[field] = { [operator]: Number(value) };
-      }
-    });
-  }
-
-  const count = await ProductModel.countDocuments({ ...name });
+  const count = await ProductModel.countDocuments({ ...req.query.name });
   const products = await query;
   res
     .status(StatusCodes.OK)

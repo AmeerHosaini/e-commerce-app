@@ -5,7 +5,6 @@ import {
   styled,
   Typography,
   Box,
-  Container,
   Slider,
   TextField,
   FormControl,
@@ -13,10 +12,10 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { listProducts } from "../actions/productAction";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import Meta from "../components/Meta";
 import Product from "../components/Product";
 import Message from "../components/Message";
@@ -47,13 +46,6 @@ const PriceInputs = styled(Box, {
   justifyContent: "space-between",
 });
 
-const StyledContainer = styled(Container, {
-  name: "StyledContainer",
-  slot: "Wrapper",
-})({
-  marginTop: 20,
-});
-
 const Home = () => {
   /* const [products, setProducts] = useState([]);
 
@@ -77,8 +69,16 @@ const Home = () => {
 
   // We are gonna make the get request through our action -- useSelector(uses a part of a state)
   const dispatch = useDispatch();
-  const { keyword } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = location.search ? location.search : null;
+  const [sliderMax, setSliderMax] = useState(1000);
+  const [priceRange, setPriceRange] = useState([0, sliderMax]);
+  const [priceOrder, setPriceOrder] = useState("descending");
+  const [filter, setFilter] = useState("");
+  const [sorting, setSorting] = useState("");
 
+  const { keyword } = useParams();
   // There is always one page if pageNumber not specified
   const { pageNumber } = useParams() || 1;
 
@@ -86,8 +86,61 @@ const Home = () => {
   const { loading, error, products, pages, page } = productList;
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber));
-  }, [dispatch, keyword, pageNumber]);
+    dispatch(listProducts(keyword, pageNumber, params, filter, sorting));
+  }, [dispatch, keyword, pageNumber, filter, params, sorting]);
+
+  // handlePriceInputChange
+  const handlePriceInputChange = (e, type) => {
+    let newRange;
+
+    if (type === "lower") {
+      newRange = [...priceRange];
+      newRange[0] = Number(e.target.value);
+      setPriceRange(newRange);
+    }
+
+    if (type === "upper") {
+      newRange = [...priceRange];
+      newRange[1] = Number(e.target.value);
+      setPriceRange(newRange);
+    }
+  };
+
+  // onSliderCommitHandler
+  const onSliderCommitHandler = (e, newValue) => {
+    buildRangeFilter(newValue);
+  };
+
+  // onTextFieldCommitHandler
+  const onTextFieldCommitHandler = () => {
+    buildRangeFilter(priceRange);
+  };
+
+  // buildRangeFilter
+  const buildRangeFilter = (newValue) => {
+    const urlFilter = `?price[gte]=${newValue[0]}&price[lte]=${newValue[1]}`;
+    setFilter(urlFilter);
+    navigate(urlFilter);
+  };
+
+  // handleSortChange
+  const handleSortChange = (e) => {
+    setPriceOrder(e.target.value);
+
+    if (e.target.value === "ascending") {
+      setSorting("price");
+    } else if (e.target.value === "descending") {
+      setSorting("-price");
+    }
+  };
+
+  // clear all filters
+  const clearAllFilters = () => {
+    setFilter("");
+    setSorting("");
+    setPriceRange([0, sliderMax]);
+    navigate("/");
+  };
 
   return (
     <>
@@ -107,7 +160,10 @@ const Home = () => {
             <Filters>
               <Slider
                 min={0}
-                max={1000}
+                max={sliderMax}
+                value={priceRange}
+                onChange={(e, newValue) => setPriceRange(newValue)}
+                onChangeCommitted={onSliderCommitHandler}
                 disabled={loading}
                 valueLabelDisplay="auto"
               />
@@ -119,6 +175,9 @@ const Home = () => {
                   variant="outlined"
                   type="number"
                   disabled={loading}
+                  value={priceRange[0]}
+                  onChange={(e) => handlePriceInputChange(e, "lower")}
+                  onBlur={onTextFieldCommitHandler}
                 />
                 <TextField
                   size="small"
@@ -127,6 +186,9 @@ const Home = () => {
                   variant="outlined"
                   type="number"
                   disabled={loading}
+                  value={priceRange[1]}
+                  onChange={(e) => handlePriceInputChange(e, "upper")}
+                  onBlur={onTextFieldCommitHandler}
                 />
               </PriceInputs>
             </Filters>
@@ -134,7 +196,12 @@ const Home = () => {
           <Grid item xs={12} sm={6}>
             <Typography gutterBottom>Sort By</Typography>
             <FormControl component="fieldset">
-              <RadioGroup aria-label="price-order" name="price-order">
+              <RadioGroup
+                aria-label="price-order"
+                name="price-order"
+                value={priceOrder}
+                onChange={handleSortChange}
+              >
                 <FormControlLabel
                   disabled={loading}
                   control={<Radio />}
@@ -151,7 +218,9 @@ const Home = () => {
             </FormControl>
           </Grid>
         </Grid>
-        <Button className="btn btn-dark">Clear All</Button>
+        <Button className="btn btn-dark" onClick={clearAllFilters}>
+          Clear All
+        </Button>
       </StyledPaper>
       <h1 className={`mt-3`}>Latest Products</h1>
       {loading ? (
