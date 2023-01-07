@@ -25,58 +25,24 @@ import {
 import axios from "axios";
 
 // Thunk allows us to create async funtions. Create functions within functions
-export const listProducts =
-  (keyword = "", pageNumber = "", params, filter = "", sorting) =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: PRODUCT_LIST_REQUEST });
+export const listProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_LIST_REQUEST });
 
-      let query;
+    // if you have more than one query string, the first one would be ? and the rest would be &
+    const { data } = await axios.get(`/api/products`);
 
-      if (params && !filter) {
-        query = params;
-      } else {
-        query = filter;
-      }
-
-      if (sorting) {
-        if (query.length === 0) {
-          query = `?sort=${sorting}`;
-        } else {
-          query = query + "&sort=" + sorting;
-        }
-      }
-
-      if (keyword) {
-        if (query.length === 0) {
-          query = `?name=${keyword}`;
-        } else {
-          query = query + "&name=" + keyword;
-        }
-      }
-
-      if (pageNumber) {
-        if (query.length === 0) {
-          query = `?pageNumber=${pageNumber}`;
-        } else {
-          query = query + "&pageNumber=" + pageNumber;
-        }
-      }
-
-      // if you have more than one query string, the first one would be ? and the rest would be &
-      const { data } = await axios.get(`/api/products${query}`);
-
-      dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
-    } catch (error) {
-      dispatch({
-        type: PRODUCT_LIST_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      });
-    }
-  };
+    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {

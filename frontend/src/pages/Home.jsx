@@ -13,8 +13,6 @@ import {
   Radio,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { listProducts } from "../actions/productAction";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import Meta from "../components/Meta";
 import Product from "../components/Product";
@@ -22,6 +20,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Paginate from "../components/paginate";
 import ProductCarousel from "../components/ProductCarousel";
+import axios from "axios";
 
 const StyledPaper = styled(Paper, {
   name: "StyledPaper",
@@ -47,28 +46,7 @@ const PriceInputs = styled(Box, {
 });
 
 const Home = () => {
-  /* const [products, setProducts] = useState([]);
-
-  // With this syntax we get a 404 error, because axios is looking at localhost:3000/api/products
-  // If we had specified the localhost route, we would have gotten across domain error
-  // We must set up proxy to look for localhost:5000 in the package.json
-  // http:127.0.0.1 is the loopback (localhost)
-  // const getProducts = async () => {
-  //   const { data } = await axios.get("/api/products");
-  //   setProducts(data);
-  // };
-
-  // useEffect(() => {
-  //   // const getProducts = async () => {
-  //   //   const { data } = await axios.get("/api/products");
-  //   //   setProducts(data);
-  //   // }
-  //   getProducts();
-  // }, []);
-  */
-
   // We are gonna make the get request through our action -- useSelector(uses a part of a state)
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const params = location.search ? location.search : null;
@@ -82,12 +60,88 @@ const Home = () => {
   // There is always one page if pageNumber not specified
   const { pageNumber } = useParams() || 1;
 
-  const productList = useSelector((state) => state.productList);
-  const { loading, error, products, pages, page } = productList;
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(null);
+  const [pages, setPages] = useState(null);
+
+  const updateUiValues = (uiValues) => {
+    setSliderMax(uiValues.maxPrice);
+    if (uiValues.filtering.price) {
+      let priceFilter = uiValues.filtering.price;
+
+      // it's the same as our url, it helps us to update our state.
+      setPriceRange([Number(priceFilter.gte), Number(priceFilter.lte)]);
+    }
+
+    if (uiValues.sorting.price) {
+      let priceSort = uiValues.sorting.price;
+      setPriceOrder(priceSort);
+    }
+  };
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber, params, filter, sorting));
-  }, [dispatch, keyword, pageNumber, filter, params, sorting]);
+    let cancel;
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        let query;
+
+        if (params && !filter) {
+          query = params;
+        } else {
+          query = filter;
+        }
+
+        if (sorting) {
+          if (query.length === 0) {
+            query = `?sort=${sorting}`;
+          } else {
+            query = query + "&sort=" + sorting;
+          }
+        }
+
+        if (keyword) {
+          if (query.length === 0) {
+            query = `?name=${keyword}`;
+          } else {
+            query = query + "&name=" + keyword;
+          }
+        }
+
+        if (pageNumber) {
+          if (query.length === 0) {
+            query = `?pageNumber=${pageNumber}`;
+          } else {
+            query = query + "&pageNumber=" + pageNumber;
+          }
+        }
+
+        const { data } = await axios({
+          method: "GET",
+          url: `/api/products${query}`,
+          cancelToken: new axios.CancelToken((c) => (cancel = c)),
+        });
+
+        setProducts(data.products);
+        setPage(data.page);
+        setPages(data.pages);
+        setLoading(false);
+        updateUiValues(data.uiValues);
+      } catch (error) {
+        if (axios.isCancel(error)) return;
+        setError(
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message
+        );
+        setLoading(false);
+      }
+    };
+    fetchData();
+    return () => cancel();
+  }, [filter, params, sorting, keyword, pageNumber]);
 
   // handlePriceInputChange
   const handlePriceInputChange = (e, type) => {
@@ -153,10 +207,12 @@ const Home = () => {
         </Link>
       )}
       {/* Filtering */}
-      <StyledPaper>
+      <StyledPaper className="mui-slider-bg">
         <Grid container>
           <Grid item xs={12} sm={6}>
-            <Typography gutterBottom>Filters</Typography>
+            <Typography gutterBottom className="mui-font">
+              Filters
+            </Typography>
             <Filters>
               <Slider
                 min={0}
@@ -194,7 +250,9 @@ const Home = () => {
             </Filters>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography gutterBottom>Sort By</Typography>
+            <Typography gutterBottom className="mui-font">
+              Sort By
+            </Typography>
             <FormControl component="fieldset">
               <RadioGroup
                 aria-label="price-order"
@@ -218,7 +276,7 @@ const Home = () => {
             </FormControl>
           </Grid>
         </Grid>
-        <Button className="btn btn-dark" onClick={clearAllFilters}>
+        <Button className="btn btn-primary" onClick={clearAllFilters}>
           Clear All
         </Button>
       </StyledPaper>

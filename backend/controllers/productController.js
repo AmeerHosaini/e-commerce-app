@@ -7,31 +7,19 @@ const { NotFound, BadRequest } = require("../errors/index");
 // @route /api/products
 // @access public
 const getProducts = asyncHandler(async (req, res) => {
-  // // match the keyword to the name of the product
-  // // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
-  // const pageSize = 3;
-  // const page = Number(req.query.pageNumber) || 1;
-
-  // const keyword = req.query.keyword
-  //   ? {
-  //       name: {
-  //         $regex: req.query.keyword,
-  //         $options: "i",
-  //       },
-  //     }
-  //   : {};
-
-  // const count = await ProductModel.countDocuments({ ...keyword });
-  // const products = await ProductModel.find({ ...keyword })
-  //   .limit(pageSize)
-  //   .skip(pageSize * (page - 1));
-
-  // res
-  //   .status(StatusCodes.OK)
-  //   .json({ products, page, pages: Math.ceil(count / pageSize) });
-
   let query;
+  let uiValues = {
+    filtering: {},
+    sorting: {},
+  };
   const reqQuery = { ...req.query };
+
+  const filterKeys = Object.keys(reqQuery);
+  const filterValues = Object.values(reqQuery);
+
+  filterKeys.forEach(
+    (value, index) => (uiValues.filtering[value] = filterValues[index])
+  );
 
   // search
   if (req.query.name) {
@@ -57,6 +45,7 @@ const getProducts = asyncHandler(async (req, res) => {
       } else {
         order = "ascending";
       }
+      uiValues.sorting[value.replace("-", "")] = order;
     });
     const sortByStr = sortByArr.join(" ");
     query = query.sort(sortByStr);
@@ -72,9 +61,22 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const count = await ProductModel.countDocuments({ ...req.query.name });
   const products = await query;
+
+  const maxPrice = await ProductModel.find()
+    .sort({ price: -1 })
+    .limit(1)
+    .select("-_id price");
+  const minPrice = await ProductModel.find()
+    .sort({ price: 1 })
+    .limit(1)
+    .select("-_id price");
+
+  uiValues.maxPrice = maxPrice[0].price;
+  uiValues.minPrice = minPrice[0].price;
+
   res
     .status(StatusCodes.OK)
-    .json({ products, page, pages: Math.ceil(count / pageSize) });
+    .json({ products, page, pages: Math.ceil(count / pageSize), uiValues });
 });
 
 // @desc Fetch a single product
