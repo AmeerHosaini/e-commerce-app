@@ -51,7 +51,9 @@ const Home = () => {
   const location = useLocation();
   const params = location.search ? location.search : null;
   const [sliderMax, setSliderMax] = useState(1000);
+  // dots on the slider
   const [priceRange, setPriceRange] = useState([0, sliderMax]);
+  // radio buttons
   const [priceOrder, setPriceOrder] = useState("descending");
   const [filter, setFilter] = useState("");
   const [sorting, setSorting] = useState("");
@@ -60,6 +62,7 @@ const Home = () => {
   // There is always one page if pageNumber not specified
   const { pageNumber } = useParams() || 1;
 
+  // component state
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -82,12 +85,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    // Whenever the component refreshes twice or reloads twice due to the useEffect state change, we dont want to make 2 axios requests
     let cancel;
     const fetchData = async () => {
       setLoading(true);
       try {
         let query;
-
+        // if there is something in search params (url)
         if (params && !filter) {
           query = params;
         } else {
@@ -120,7 +124,9 @@ const Home = () => {
 
         const { data } = await axios({
           method: "GET",
+          // no need for http because we have set up a proxy
           url: `/api/products${query}`,
+          // cancel the first one and
           cancelToken: new axios.CancelToken((c) => (cancel = c)),
         });
 
@@ -131,6 +137,7 @@ const Home = () => {
         updateUiValues(data.uiValues);
       } catch (error) {
         if (axios.isCancel(error)) return;
+        // this is how axios shows the error
         setError(
           error.response && error.response.data.message
             ? error.response.data.message
@@ -140,8 +147,11 @@ const Home = () => {
       }
     };
     fetchData();
+    // When we return a function, it gets run whenever our component dismounts
+    // We want to return a function that calls cancel, not call the api twice
     return () => cancel();
   }, [filter, params, sorting, keyword, pageNumber]);
+  // if our url params changes, we want to change our query
 
   // handlePriceInputChange
   const handlePriceInputChange = (e, type) => {
@@ -162,18 +172,22 @@ const Home = () => {
 
   // onSliderCommitHandler
   const onSliderCommitHandler = (e, newValue) => {
+    // We want to refresh when this function is invoked
     buildRangeFilter(newValue);
   };
 
   // onTextFieldCommitHandler
+  // Whenever we exit the text field, this will fire off
   const onTextFieldCommitHandler = () => {
     buildRangeFilter(priceRange);
   };
 
   // buildRangeFilter
   const buildRangeFilter = (newValue) => {
+    // Redirect to save the old filter in the url and when we referesh the filter gets saved
     const urlFilter = `?price[gte]=${newValue[0]}&price[lte]=${newValue[1]}`;
     setFilter(urlFilter);
+    // we want to redirect to match that state. when we refresh, we keep that filter state
     navigate(urlFilter);
   };
 

@@ -12,11 +12,19 @@ const getProducts = asyncHandler(async (req, res) => {
     filtering: {},
     sorting: {},
   };
+
+  // gets the request queries and stores in an object
   const reqQuery = { ...req.query };
 
+  // When we refresh the UI, inputs get back to their default value
+  // We also want the backend to get the UI's default values and filter them
+  // We filter through request params for anything that should update the UI, and then send back an object that the UI can reupdate itelf with
+
+  // Turn the keys and values from query into an Array
   const filterKeys = Object.keys(reqQuery);
   const filterValues = Object.values(reqQuery);
 
+  // We want to update the UI values object and change the filtering with key we are looping over, and give its value whatever the filtered value at that index is
   filterKeys.forEach(
     (value, index) => (uiValues.filtering[value] = filterValues[index])
   );
@@ -27,7 +35,10 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 
   // Filter
+  // Turn the reqQuery into json string for manipulating
   let queryString = JSON.stringify(reqQuery);
+
+  // Add a dollar sign - $lte - change it to a format that mongoDB understands
   queryString = queryString.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
@@ -35,10 +46,12 @@ const getProducts = asyncHandler(async (req, res) => {
 
   query = ProductModel.find(JSON.parse(queryString));
 
-  // sort
+  // sort ---- sort=price,rating
   if (req.query.sort) {
     const sortByArr = req.query.sort.split(",");
+    // if there is filtering, we want to update the filtering state of the ui
     sortByArr.forEach((value) => {
+      // specify the order, sortByArr
       let order;
       if (value[0] === "-") {
         order = "descending";
