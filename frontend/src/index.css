@@ -6,6 +6,7 @@
 
 .dark {
   --clr-bcg: #282c35;
+  --clr-bcg-slider: #343a40;
   --clr-font: #fff;
   --clr-bcg-carousel: rgb(58, 58, 58);
   --clr-card: var(--clr-dark-bootstrap);
@@ -13,6 +14,7 @@
 
 .light {
   --clr-bcg: #fff;
+  --clr-bcg-slider: #fff;
   --clr-font: #282c35;
   --clr-bcg-carousel: rgb(58, 58, 58);
   --clr-card: #fff;
@@ -158,3 +160,20 @@ footer {
   margin-bottom: 2rem;
 }
 
+p.MuiTypography-root.MuiTypography-body1.MuiTypography-gutterBottom.mui-font.css-d3wcwz-MuiTypography-root{
+  font-size: 1.5rem;
+  color: var(--clr-font);
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.mui-slider-bg.css-17vpivy-MuiPaper-root-StyledPaper-wrapper {
+  background-color: var(--clr-bcg-slider);
+  color: var(--clr-font);
+}
+
+#upper, #lower {
+  color: var(--clr-font);
+}
+
+.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.MuiFormLabel-filled.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root {
+  color: #007bff;
+}

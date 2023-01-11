@@ -7,28 +7,89 @@ const { NotFound, BadRequest } = require("../errors/index");
 // @route /api/products
 // @access public
 const getProducts = asyncHandler(async (req, res) => {
-  // // match the keyword to the name of the product
-  // // if we didnt do this we would have to put the exact name in the search box name === req.query.keyword
-  const pageSize = 3;
-  const page = Number(req.query.pageNumber) || 1;
+  let query;
+  let uiValues = {
+    filtering: {},
+    sorting: {},
+  };
 
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
+  // gets the request queries and stores in an object
+  const reqQuery = { ...req.query };
+
+  // When we refresh the UI, inputs get back to their default value
+  // We also want the backend to get the UI's default values and filter them
+  // We filter through request params for anything that should update the UI, and then send back an object that the UI can reupdate itelf with
+
+  // Turn the keys and values from query into an Array
+  const filterKeys = Object.keys(reqQuery);
+  const filterValues = Object.values(reqQuery);
+
+  // We want to update the UI values object and change the filtering with key we are looping over, and give its value whatever the filtered value at that index is
+  filterKeys.forEach(
+    (value, index) => (uiValues.filtering[value] = filterValues[index])
+  );
+
+  // search
+  if (req.query.name) {
+    reqQuery.name = { $regex: req.query.name, $options: "i" };
+  }
+
+  // Filter
+  // Turn the reqQuery into json string for manipulating
+  let queryString = JSON.stringify(reqQuery);
+
+  // Add a dollar sign - $lte - change it to a format that mongoDB understands
+  queryString = queryString.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
+  query = ProductModel.find(JSON.parse(queryString));
+
+  // sort ---- sort=price,rating
+  if (req.query.sort) {
+    const sortByArr = req.query.sort.split(",");
+    // if there is filtering, we want to update the filtering state of the ui
+    sortByArr.forEach((value) => {
+      // specify the order, sortByArr
+      let order;
+      if (value[0] === "-") {
+        order = "descending";
+      } else {
+        order = "ascending";
       }
-    : {};
+      uiValues.sorting[value.replace("-", "")] = order;
+    });
+    const sortByStr = sortByArr.join(" ");
+    query = query.sort(sortByStr);
+  } else {
+    query = query.sort("-price");
+  }
 
-  const count = await ProductModel.countDocuments({ ...keyword });
-  const products = await ProductModel.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
+  // Pagination
+  const pageSize = 4;
+  const page = Number(req.query.pageNumber) || 1;
+  const skip = (page - 1) * pageSize;
+  query = query.skip(skip).limit(pageSize);
+
+  const count = await ProductModel.countDocuments({ ...req.query.name });
+  const products = await query;
+
+  const maxPrice = await ProductModel.find()
+    .sort({ price: -1 })
+    .limit(1)
+    .select("-_id price");
+  const minPrice = await ProductModel.find()
+    .sort({ price: 1 })
+    .limit(1)
+    .select("-_id price");
+
+  uiValues.maxPrice = maxPrice[0].price;
+  uiValues.minPrice = minPrice[0].price;
 
   res
     .status(StatusCodes.OK)
-    .json({ products, page, pages: Math.ceil(count / pageSize) });
+    .json({ products, page, pages: Math.ceil(count / pageSize), uiValues });
 });
 
 // @desc Fetch a single product

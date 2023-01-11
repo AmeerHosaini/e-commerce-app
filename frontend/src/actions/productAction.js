@@ -25,28 +25,24 @@ import {
 import axios from "axios";
 
 // Thunk allows us to create async funtions. Create functions within functions
-export const listProducts =
-  (keyword = "", pageNumber = "") =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: PRODUCT_LIST_REQUEST });
+export const listProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_LIST_REQUEST });
 
-      // if you have more than one query string, the first one would be ? and the rest would be &
-      const { data } = await axios.get(
-        `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
-      );
+    // if you have more than one query string, the first one would be ? and the rest would be &
+    const { data } = await axios.get(`/api/products`);
 
-      dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
-    } catch (error) {
-      dispatch({
-        type: PRODUCT_LIST_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      });
-    }
-  };
+    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const listProductDetails = (id) => async (dispatch) => {
   try {
