@@ -1,7 +1,14 @@
 const User = require("../models/UserModel");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequest, UnAuthenticated, NotFound } = require("../errors/index");
+const {
+  BadRequest,
+  UnAuthenticated,
+  NotFound,
+  ServerError,
+} = require("../errors/index");
 const asyncHandler = require("express-async-handler");
+const sendMail = require("../utils/sendEmail");
+const crypto = require("crypto");
 
 // @desc Auth user and get token
 // @route POST /api/users/login
@@ -197,6 +204,81 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc forgot Password
+// @route POST /api/users/forgotpassword
+// @access Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new NotFound("Email could not be found");
+  }
+  // generate Token
+  const resetToken = user.getResetPasswordToken();
+  // save the newly created field to the DB
+  await user.save();
+
+  const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
+
+  const message = `
+    <h1>You have requested a password reset</h1>
+    <p>Please go to this link to reset your password</p>
+    <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+  `;
+
+  try {
+    await sendMail({
+      to: user.email,
+      subject: "Password reset request",
+      text: message,
+    });
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      data: "Email sent",
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+    throw new ServerError("Email could not be sent");
+  }
+});
+
+// @desc Reset Password
+// @route PUT /api/users/resetPassword/:resetToken
+// @access Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
+  // search for the user that has the same token
+  const user = await User.findOne({
+    resetPasswordToken,
+    // ensures that the token is still valid
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new BadRequest("Invalid Reset Token");
+  }
+
+  // send the new password
+  user.password = req.body.password;
+
+  // we dont want the user to reuse the token
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  // resave the password and hash it
+  await user.save();
+  res.status(StatusCodes.CREATED).json({
+    success: true,
+    data: "Password Reset Success",
+  });
+});
+
 module.exports = {
   authUser,
   getUserProfile,
@@ -206,4 +288,6 @@ module.exports = {
   deleteUser,
   getUserById,
   updateUser,
+  forgotPassword,
+  resetPassword,
 };

@@ -19,6 +19,8 @@ import ProductListPage from "./pages/ProductListPage";
 import ProductEditPage from "./pages/ProductEditPage";
 import OrderListPage from "./pages/OrderListPage";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   const lightTheme = "light";
@@ -70,6 +72,11 @@ const App = () => {
             <Route path="/cart/:id" element={<CartPage theme={theme} />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route
+              path="/passwordreset/:resetToken"
+              element={<ResetPassword />}
+            />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/shipping" element={<ShippingPage />} />
             {/* <Route path="/login/shipping" element={<ShippingPage />} /> */}

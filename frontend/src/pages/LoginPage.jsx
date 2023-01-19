@@ -75,6 +75,11 @@ const LoginPage = () => {
           </Link>
         </Col>
       </Row>
+      <Row>
+        <Col>
+          <Link to={"/forgotpassword"}>Forgot Password?</Link>
+        </Col>
+      </Row>
     </FormContainer>
   );
 };
