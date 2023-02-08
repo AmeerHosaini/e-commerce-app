@@ -2,22 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Button,
-  Card,
-  Form,
-} from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Button, Form } from "react-bootstrap";
 import { addToCart, removeFromCart } from "../actions/cartAction";
 
-const CartPage = ({ theme }) => {
-  const lightTheme = "light";
-  const darkTheme = "dark";
-  const textStyle = `text-${theme === lightTheme ? darkTheme : lightTheme}`;
-
+const CartPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentLocation = useLocation();
@@ -48,10 +36,13 @@ const CartPage = ({ theme }) => {
   return (
     <Row>
       <Col md={8}>
-        <h1 className={`${textStyle}`}>Shopping Cart</h1>
+        <h1>Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
-            Your Cart is Empty <Link to="/">Go Back</Link>
+            Your Cart is Empty{" "}
+            <Link className="login-link" to="/">
+              Go Back
+            </Link>
           </Message>
         ) : (
           <ListGroup variant="flush" className="card">
@@ -87,7 +78,6 @@ const CartPage = ({ theme }) => {
                       type="button"
                       variant="light"
                       onClick={() => removeFromCartHandler(item.product)}
-                      className="mt-2"
                     >
                       <i className="fas fa-trash"></i>
                     </Button>

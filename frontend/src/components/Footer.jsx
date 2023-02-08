@@ -1,17 +1,13 @@
 import { Container, Row, Col } from "react-bootstrap";
 
-const Footer = ({ theme }) => {
+const Footer = () => {
   const date = new Date().getFullYear();
 
-  const lightTheme = "light";
-  const darkTheme = "dark";
-  const textStyle = `text-${theme === lightTheme ? darkTheme : lightTheme}`;
-
   return (
-    <footer className={`bg-${theme}`}>
+    <footer>
       <Container>
         <Row>
-          <Col className={`text-center ${textStyle} font-weight-normal`}>
+          <Col className="text-center font-weight-normal">
             Copyright &copy; StoreHook {date}
           </Col>
         </Row>

@@ -177,3 +177,21 @@ p.MuiTypography-root.MuiTypography-body1.MuiTypography-gutterBottom.mui-font.css
 .MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.MuiFormLabel-filled.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-shrink.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root {
   color: #007bff;
 }
+
+a.login-link {
+  color: #007bff;
+  background-color: transparent;
+}
+
+a.active.dropdown-item {
+  color: #fff;
+}
+
+a.active.dropdown-item:hover {
+  color: #fff;
+}
+
+footer {
+  background-color: var(--clr-bcg-slider);
+  color: var(--clr-font);
+}

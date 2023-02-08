@@ -18,15 +18,11 @@ import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
-const Products = ({ theme }) => {
+const Products = () => {
   // console.log(params.id);
   // We will fetch it from the backend
   // const product = products.find((product) => product._id === params.id);
   // const [product, setProduct] = useState({});
-
-  const lightTheme = "light";
-  const darkTheme = "dark";
-  const textStyle = `text-${theme === lightTheme ? darkTheme : lightTheme}`;
 
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(0);
@@ -126,7 +122,7 @@ const Products = ({ theme }) => {
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <Row>
-                        <Col>Quantity</Col>
+                        <Col className="my-2">Quantity:</Col>
                         <Col>
                           <Form.Control
                             as="select"
@@ -163,7 +159,7 @@ const Products = ({ theme }) => {
           </Row>
           <Row>
             <Col md={6} className="mt-3">
-              <h2 className={textStyle}>Reviews</h2>
+              <h2>Reviews</h2>
               {product.reviews.length === 0 && <Message>No reviews</Message>}
               <ListGroup variant="flush">
                 {product.reviews.map((review) => (
@@ -203,11 +199,6 @@ const Products = ({ theme }) => {
                           row="3"
                           value={comment}
                           onChange={(e) => setComment(e.target.value)}
-                          style={{
-                            color: theme === "info" ? "primary" : "info",
-                            backgroundColor:
-                              theme === "info" ? "primary" : "info",
-                          }}
                         ></Form.Control>
                       </Form.Group>
                       <Button type="submit" variant="primary">
@@ -216,7 +207,11 @@ const Products = ({ theme }) => {
                     </Form>
                   ) : (
                     <Message>
-                      Please <Link to="/login">sign in</Link> to post a review
+                      Please{" "}
+                      <Link className="login-link" to="/login">
+                        sign in
+                      </Link>{" "}
+                      to post a review
                     </Message>
                   )}
                 </ListGroup.Item>

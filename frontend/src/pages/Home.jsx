@@ -216,7 +216,7 @@ const Home = () => {
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to="/" className={`btn btn-dark`}>
+        <Link to="/" className="btn btn-dark">
           Go Back
         </Link>
       )}

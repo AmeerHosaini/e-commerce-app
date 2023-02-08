@@ -57,19 +57,16 @@ const App = () => {
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/search/:keyword" element={<Home theme={theme} />} />
-            <Route path="/filter/:price" element={<Home theme={theme} />} />
-            <Route path="/page/:pageNumber" element={<Home theme={theme} />} />
+            <Route path="/search/:keyword" element={<Home />} />
+            <Route path="/filter/:price" element={<Home />} />
+            <Route path="/page/:pageNumber" element={<Home />} />
             <Route
               path="/search/:keyword/page/:pageNumber"
-              element={<Home theme={theme} />}
+              element={<Home />}
             />
-            <Route
-              path="/product/:id"
-              element={<ProductPage theme={theme} />}
-            />
-            <Route path="/cart" element={<CartPage theme={theme} />} />
-            <Route path="/cart/:id" element={<CartPage theme={theme} />} />
+            <Route path="/product/:id" element={<ProductPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/cart/:id" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
@@ -79,7 +76,7 @@ const App = () => {
             />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/shipping" element={<ShippingPage />} />
-            {/* <Route path="/login/shipping" element={<ShippingPage />} /> */}
+            <Route path="/login/shipping" element={<ShippingPage />} />
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/placeorder" element={<PlaceOrderPage />} />
             <Route path="/order/:id" element={<OrderDetailsPage />} />
@@ -99,7 +96,7 @@ const App = () => {
           </Routes>
         </Container>
       </main>
-      <Footer theme={theme} />
+      <Footer />
     </Router>
   );
 };
