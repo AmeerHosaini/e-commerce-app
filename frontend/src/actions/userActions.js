@@ -3,6 +3,9 @@ import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
+  USER_GOOGLE_LOGIN_REQUEST,
+  USER_GOOGLE_LOGIN_SUCCESS,
+  USER_GOOGLE_LOGIN_FAIL,
   USER_LOGOUT,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
@@ -52,6 +55,31 @@ export const login = (email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.msg
+          ? error.response.data.msg
+          : error.msg,
+    });
+  }
+};
+
+export const googleLogin = (credentialResponse) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_GOOGLE_LOGIN_REQUEST });
+    const { data } = await axios.post("/api/users/google-login", {
+      tokenId: credentialResponse.credential,
+    });
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${credentialResponse.access_token}`,
+    //   },
+    // };
+    // const { data } = await axios.post("/api/users/google-login", config);
+    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_GOOGLE_LOGIN_FAIL,
       payload:
         error.response && error.response.data.msg
           ? error.response.data.msg

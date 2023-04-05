@@ -13,6 +13,7 @@ import {
 import { cartReducer } from "./reducers/cartReducers";
 import {
   userLoginReducer,
+  userGoogleLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
@@ -41,6 +42,7 @@ const reducer = combineReducers({
   productTopRated: productTopRatedReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
+  userGoogleLogin: userGoogleLoginReducer,
   // when we useSelect these, we will reference it by object key
   // useSelect(state => state.userRegister)
   // Then, we destructure the states that are in the userReducer from userRegister
@@ -85,6 +87,7 @@ const initialState = {
     paymentMethod: paymentMethodFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
+  userGoogleLogin: { userInfo: userInfoFromStorage },
 };
 
 const middleware = [thunk];
