@@ -9,6 +9,7 @@ const {
 const asyncHandler = require("express-async-handler");
 const sendMail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
 
 // @desc Auth user and get token
 // @route POST /api/users/login
@@ -61,6 +62,87 @@ const authUser = asyncHandler(async (req, res) => {
     isAdmin: user.isAdmin,
     token,
   });
+});
+
+// @desc sign in user with gmail
+// @route POST /api/users/google-login
+// @access Public
+const googleLogin = asyncHandler(async (req, res) => {
+  // get tokenId coming from the frontend
+  const { tokenId } = req.body;
+
+  // Verify tokenId
+  const client = new OAuth2Client(process.env.G_CLIENT_ID);
+  const ticket = await client.verifyIdToken({
+    idToken: tokenId,
+    audience: process.env.G_CLIENT_ID,
+  });
+
+  // get Data
+  const payload = ticket.getPayload();
+  const email_verified = payload.email_verified;
+  const email = payload.email;
+  const name = payload.name;
+  const picture = payload.picture;
+
+  // failed Verification
+  if (!email || !email_verified) {
+    throw new BadRequest("Email Verification Failed");
+  }
+
+  // passed verification
+  const user = await User.findOne({ email });
+
+  // if user exists in db / sign in
+  if (user) {
+    // create a refresh token
+    const refreshToken = user.createRefreshToken();
+    // create a token
+    const token = user.createJwt();
+
+    // store cookie
+    res.cookie("_apprftoken", refreshToken, {
+      httpOnly: true,
+      path: "/api/users/login",
+      maxAge: 24 * 60 * 60 * 1000, // 24hrs
+    });
+    // success, include user info in response
+    res.status(StatusCodes.OK).json({
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token,
+    });
+  } else {
+    // new user, create user
+    const password = email + process.env.G_CLIENT_ID;
+    const newUser = new User({
+      name,
+      email,
+      password,
+    });
+    await newUser.save();
+    // sign in the user
+    // create a refresh token
+    const refreshToken = user.createRefreshToken();
+
+    // create a token
+    const token = user.createJwt();
+
+    // store cookie
+    res.cookie("_apprftoken", refreshToken, {
+      httpOnly: true,
+      path: "/api/users/login",
+      maxAge: 24 * 60 * 60 * 1000, // 24hrs
+    });
+    // success, include user info in response
+    res.status(StatusCodes.CREATED).json({
+      name: newUser.name,
+      email: newUser.email,
+      isAdmin: newUser.isAdmin,
+      token,
+    });
+  }
 });
 
 // @desc Get user profile
@@ -281,6 +363,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 module.exports = {
   authUser,
+  googleLogin,
   getUserProfile,
   registerUser,
   updateUserProfile,

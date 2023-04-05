@@ -60,6 +60,13 @@ UserSchema.methods.createJwt = function () {
   });
 };
 
+// create a refresh token
+UserSchema.methods.createRefreshToken = function () {
+  return jwt.sign({ id: this._id }, process.env.G_REFRESH_TOKEN, {
+    expiresIn: "24h",
+  });
+};
+
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   // compare the entered password with user's password
   return await bcrypt.compare(enteredPassword, this.password);

@@ -4,6 +4,7 @@ const { protect, admin } = require("../middlewares/auth_middleware");
 
 const {
   authUser,
+  googleLogin,
   getUserProfile,
   registerUser,
   updateUserProfile,
@@ -17,6 +18,7 @@ const {
 
 router.route("/").post(registerUser).get(protect, admin, getUsers);
 router.post("/login", authUser);
+router.post("/google-login", googleLogin);
 router
   .route("/profile")
   .get(protect, getUserProfile)
