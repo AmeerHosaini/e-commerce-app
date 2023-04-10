@@ -191,6 +191,12 @@ a.active.dropdown-item:hover {
   color: #fff;
 }
 
+.btn-google-login svg {
+  font-size: 1.1rem;
+  margin-left: 10px;
+  margin-bottom: 1.5px;
+}
+
 footer {
   background-color: var(--clr-bcg-slider);
   color: var(--clr-font);

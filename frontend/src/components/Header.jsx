@@ -15,6 +15,10 @@ const Header = ({ theme, toggleTheme }) => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { userInfo: userGoogleInfo } = userGoogleLogin;
+
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
@@ -39,9 +43,13 @@ const Header = ({ theme, toggleTheme }) => {
                   <span className={textStyle}>Cart</span>
                 </Nav.Link>
               </LinkContainer>
-              {userInfo ? (
+              {userInfo || userGoogleInfo ? (
                 <NavDropdown
-                  title={<span className={textStyle}>{userInfo.name}</span>}
+                  title={
+                    <span className={textStyle}>
+                      {userInfo?.name || userGoogleInfo?.name}
+                    </span>
+                  }
                   id="username"
                 >
                   <LinkContainer to="/profile">
@@ -59,7 +67,8 @@ const Header = ({ theme, toggleTheme }) => {
                   </Nav.Link>
                 </LinkContainer>
               )}
-              {userInfo && userInfo.isAdmin && (
+              {(userInfo && userInfo.isAdmin) ||
+              (userGoogleInfo && userGoogleInfo.isAdmin) ? (
                 <NavDropdown
                   title={<span className={textStyle}>Admin</span>}
                   id="adminMenu"
@@ -74,7 +83,7 @@ const Header = ({ theme, toggleTheme }) => {
                     <NavDropdown.Item>Orders</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
-              )}
+              ) : null}
               <Nav.Link onClick={toggleTheme}>
                 {theme === darkTheme ? (
                   <i className={`fas fa-sun ${textStyle}`}></i>

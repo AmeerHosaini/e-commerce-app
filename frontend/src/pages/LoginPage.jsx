@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +7,7 @@ import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import { login, googleLogin } from "../actions/userActions";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -21,15 +22,18 @@ const LoginPage = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
 
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { userInfo: googleUserInfo } = userGoogleLogin;
+
   // We want to redirect
   // We dont want to come to the login page if we are logged in
   useEffect(() => {
     // if user is not logged in, it will be null
-    if (userInfo) {
+    if (userInfo || googleUserInfo) {
       // navigate(redirect) --- redirects to '/login/shipping', and it needs a correspondent route in App.js, Why?
       navigate(redirect);
     }
-  }, [userInfo, redirect, navigate]);
+  }, [userInfo, redirect, navigate, googleUserInfo]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -37,55 +41,25 @@ const LoginPage = () => {
     dispatch(login(email, password));
   };
 
-  // const g_login = useGoogleLogin({
-  //   onSuccess: (credentialResponse) =>
-  //     dispatch(googleLogin(credentialResponse)),
-  // });
+  const g_login = useGoogleLogin({
+    onSuccess: (codeResponse) => dispatch(googleLogin(codeResponse)),
+  });
 
-  const googleSuccess = async (credentialResponse) => {
-    console.log(credentialResponse);
-    dispatch(googleLogin(credentialResponse));
-  };
+  // This part is used when using GoogleLogin component from @react-oauth/google
+  // const googleSuccess = async (credentialResponse) => {
+  //   console.log(credentialResponse);
+  //   dispatch(googleLogin(credentialResponse));
+  // };
 
-  const googleError = () => {
-    console.log("Error happened");
-  };
+  // const googleError = () => {
+  //   console.log("Error happened");
+  // };
 
   return (
     <FormContainer>
       <h1>Sign In</h1>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
-      {/* <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="password">
-          <Form.Label className="mt-2">Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-
-        <Button className="mt-3" type="submit" variant="primary">
-          Sign In
-        </Button>
-        <GoogleLogin
-          buttonText="Sign in with Google"
-          onSuccess={googleSuccess}
-          onFailure={googleError}
-        />
-      </Form> */}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
@@ -117,16 +91,25 @@ const LoginPage = () => {
             Sign In
           </Button>
           <div
-            className="btn btn-outline-primary mt-3"
+            className="btn btn-outline-primary mt-3 btn-google-login"
             style={{ width: "48%" }}
-            // onClick={() => g_login()}
+            onClick={() => g_login()}
           >
-            <GoogleLogin
+            {/* <GoogleLogin
               buttonText="Sign in with Google"
               onSuccess={googleSuccess}
               onFailure={googleError}
+            /> 
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+              console.log(credentialResponse);
+            }}
+              onError={() => {
+              console.log("Login Failed");
+            }}
             />
-            {/* Sign in with Google */}
+            */}
+            Google <FcGoogle />
           </div>
         </div>
       </Form>

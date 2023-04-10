@@ -63,19 +63,25 @@ export const login = (email, password) => async (dispatch) => {
   }
 };
 
-export const googleLogin = (credentialResponse) => async (dispatch) => {
+// The commented section pertains to using GoogleLogin component from @react-oauth/google
+export const googleLogin = (codeResponse) => async (dispatch) => {
   try {
     dispatch({ type: USER_GOOGLE_LOGIN_REQUEST });
-    const { data } = await axios.post("/api/users/google-login", {
-      tokenId: credentialResponse.credential,
-    });
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${credentialResponse.access_token}`,
-    //   },
-    // };
-    // const { data } = await axios.post("/api/users/google-login", config);
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+    // const { data } = await axios.post("/api/users/google-login", {
+    //   tokenId: credentialResponse.credential,
+    // });
+    const access_token = codeResponse.access_token;
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post(
+      "/api/users/google-login",
+      { access_token },
+      config
+    );
+    dispatch({ type: USER_GOOGLE_LOGIN_SUCCESS, payload: data });
     localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     dispatch({

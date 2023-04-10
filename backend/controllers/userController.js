@@ -9,6 +9,7 @@ const {
 const asyncHandler = require("express-async-handler");
 const sendMail = require("../utils/sendEmail");
 const crypto = require("crypto");
+const axios = require("axios");
 const { OAuth2Client } = require("google-auth-library");
 
 // @desc Auth user and get token
@@ -64,29 +65,109 @@ const authUser = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc sign in user with gmail
+// @desc sign in user with gmail using GoogleLogin component from @react-oauth/google
+// @route POST /api/users/google-login
+// @access Public
+// const googleLogin = asyncHandler(async (req, res) => {
+//   // get tokenId coming from the frontend
+//   const { access_token } = req.body;
+
+//   // Verify tokenId
+//   const client = new OAuth2Client(process.env.G_CLIENT_ID);
+
+//   const ticket = await client.verifyIdToken({
+//     idToken: access_token,
+//     audience: process.env.G_CLIENT_ID,
+//   });
+
+//   // get Data
+//   const payload = ticket.getPayload();
+//   const email_verified = payload.email_verified;
+//   const email = payload.email;
+//   const name = payload.name;
+//   const picture = payload.picture;
+
+//   // failed Verification
+//   if (!email || !email_verified) {
+//     throw new BadRequest("Email Verification Failed");
+//   }
+
+//   // passed verification
+//   const user = await User.findOne({ email });
+
+//   // if user exists in db / sign in
+//   if (user) {
+//     // create a refresh token
+//     const refreshToken = user.createRefreshToken();
+//     // create a token
+//     const token = user.createJwt();
+
+//     // store cookie
+//     res.cookie("_apprftoken", refreshToken, {
+//       httpOnly: true,
+//       path: "/api/users/login",
+//       maxAge: 24 * 60 * 60 * 1000, // 24hrs
+//     });
+//     // success, include user info in response
+//     res.status(StatusCodes.OK).json({
+//       name: user.name,
+//       email: user.email,
+//       isAdmin: user.isAdmin,
+//       token,
+//     });
+//   } else {
+//     // new user, create user
+//     const password = email + process.env.G_CLIENT_ID;
+//     const newUser = new User({
+//       name,
+//       email,
+//       password,
+//     });
+//     await newUser.save();
+//     // sign in the user
+//     // create a refresh token
+//     const refreshToken = user.createRefreshToken();
+
+//     // create a token
+//     const token = user.createJwt();
+
+//     // store cookie
+//     res.cookie("_apprftoken", refreshToken, {
+//       httpOnly: true,
+//       path: "/api/users/login",
+//       maxAge: 24 * 60 * 60 * 1000, // 24hrs
+//     });
+//     // success, include user info in response
+//     res.status(StatusCodes.CREATED).json({
+//       name: newUser.name,
+//       email: newUser.email,
+//       isAdmin: newUser.isAdmin,
+//       token,
+//     });
+//   }
+// });
+
+// @desc sign in user with gmail using custom google button from @react-oauth/google
 // @route POST /api/users/google-login
 // @access Public
 const googleLogin = asyncHandler(async (req, res) => {
   // get tokenId coming from the frontend
-  const { tokenId } = req.body;
+  const { access_token } = req.body;
 
-  // Verify tokenId
-  const client = new OAuth2Client(process.env.G_CLIENT_ID);
-  const ticket = await client.verifyIdToken({
-    idToken: tokenId,
-    audience: process.env.G_CLIENT_ID,
-  });
+  // Make a request to Google API to get user info
+  const { data } = await axios.get(
+    `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
+  );
+  // const userInfo = await userInfoResponse.json();
 
   // get Data
-  const payload = ticket.getPayload();
-  const email_verified = payload.email_verified;
-  const email = payload.email;
-  const name = payload.name;
-  const picture = payload.picture;
+  const email = data.email;
+  const name = data.name;
+  // const verified_email = data.verified_email;
+  const picture = data.picture;
 
   // failed Verification
-  if (!email || !email_verified) {
+  if (!email) {
     throw new BadRequest("Email Verification Failed");
   }
 
@@ -124,10 +205,10 @@ const googleLogin = asyncHandler(async (req, res) => {
     await newUser.save();
     // sign in the user
     // create a refresh token
-    const refreshToken = user.createRefreshToken();
+    const refreshToken = newUser.createRefreshToken();
 
     // create a token
-    const token = user.createJwt();
+    const token = newUser.createJwt();
 
     // store cookie
     res.cookie("_apprftoken", refreshToken, {
