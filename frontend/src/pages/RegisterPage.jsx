@@ -1,3 +1,4 @@
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -12,6 +13,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
@@ -39,6 +41,10 @@ const RegisterPage = () => {
     } else {
       dispatch(register(name, email, password));
     }
+  };
+
+  const togglePassword = () => {
+    setIsVisible(!isVisible);
   };
 
   return (
@@ -71,22 +77,52 @@ const RegisterPage = () => {
 
         <Form.Group controlId="password">
           <Form.Label className="mt-2">Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter Your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></Form.Control>
+          <div style={{ position: "relative" }}>
+            <Form.Control
+              type={isVisible ? "text" : "password"}
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "0.75rem",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={togglePassword}
+            >
+              {isVisible ? <MdVisibility /> : <MdVisibilityOff />}
+            </div>
+          </div>
         </Form.Group>
 
         <Form.Group controlId="confirmPassword">
           <Form.Label className="mt-2">Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Confirm Your Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          ></Form.Control>
+          <div style={{ position: "relative" }}>
+            <Form.Control
+              type={isVisible ? "text" : "password"}
+              placeholder="Enter password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "0.75rem",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={togglePassword}
+            >
+              {isVisible ? <MdVisibility /> : <MdVisibilityOff />}
+            </div>
+          </div>
         </Form.Group>
 
         <Button className="mt-3" type="submit" variant="primary">

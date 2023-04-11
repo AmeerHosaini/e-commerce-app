@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { MdVisibilityOff, MdVisibility } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +13,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
   const { search } = useLocation();
@@ -39,6 +41,10 @@ const LoginPage = () => {
     e.preventDefault();
     // Dispatch Login
     dispatch(login(email, password));
+  };
+
+  const togglePassword = () => {
+    setIsVisible(!isVisible);
   };
 
   const g_login = useGoogleLogin({
@@ -73,12 +79,27 @@ const LoginPage = () => {
 
         <Form.Group controlId="password">
           <Form.Label className="mt-2">Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div style={{ position: "relative" }}>
+            <Form.Control
+              type={isVisible ? "text" : "password"}
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "0.75rem",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={togglePassword}
+            >
+              {isVisible ? <MdVisibility /> : <MdVisibilityOff />}
+            </div>
+          </div>
         </Form.Group>
 
         <div className="d-flex justify-content-between">
