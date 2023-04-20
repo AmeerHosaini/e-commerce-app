@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Spinner } from "react-bootstrap";
 
 const Loader = () => {
+  const { t } = useTranslation();
+
   return (
     <Spinner
       animation="border"
@@ -12,7 +15,7 @@ const Loader = () => {
         display: "grid",
       }}
     >
-      <span className="sr-only">Loading...</span>
+      <span className="sr-only">{t("loading")}</span>
     </Spinner>
   );
 };

@@ -1,12 +1,15 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="error">
       <h1>404</h1>
-      <p>Oops, the page you're looking for does not exist</p>
+      <p>{t("not-found")}</p>
       <Link className="btn btn-dark" to="/">
-        Go Back
+        {t("go-back")}
       </Link>
     </div>
   );

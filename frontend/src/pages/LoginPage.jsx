@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { MdVisibilityOff, MdVisibility } from "react-icons/md";
@@ -14,6 +15,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { search } = useLocation();
@@ -63,26 +65,26 @@ const LoginPage = () => {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1>{t("sign-in")}</h1>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="email">
-          <Form.Label>Email Address</Form.Label>
+          <Form.Label>{t("email-address")}</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder={t("enter-email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </Form.Group>
 
         <Form.Group controlId="password">
-          <Form.Label className="mt-2">Password</Form.Label>
+          <Form.Label className="mt-2">{t("password")}</Form.Label>
           <div style={{ position: "relative" }}>
             <Form.Control
               type={isVisible ? "text" : "password"}
-              placeholder="Enter password"
+              placeholder={t("enter-password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
@@ -109,7 +111,7 @@ const LoginPage = () => {
             variant="primary"
             style={{ width: "48%" }}
           >
-            Sign In
+            {t("sign-in")}
           </Button>
           <div
             className="btn btn-outline-primary mt-3 btn-google-login"
@@ -130,22 +132,22 @@ const LoginPage = () => {
             }}
             />
             */}
-            Google <FcGoogle />
+            {t("gmail")} <FcGoogle />
           </div>
         </div>
       </Form>
 
       <Row className="py-3">
         <Col>
-          New Customer?{" "}
+          {t("new-customer")}{" "}
           <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-            Register
+            {t("register")}
           </Link>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Link to={"/forgotpassword"}>Forgot Password?</Link>
+          <Link to={"/forgotpassword"}>{t("forgot-password")}</Link>
         </Col>
       </Row>
     </FormContainer>

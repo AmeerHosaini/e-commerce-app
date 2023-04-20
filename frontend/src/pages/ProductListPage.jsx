@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
@@ -17,6 +18,8 @@ const ProductListPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pageNumber } = useParams() || 1;
+
+  const { t } = useTranslation();
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages, page } = productList;
@@ -85,11 +88,11 @@ const ProductListPage = () => {
     <>
       <Row className="align-items-center">
         <Col>
-          <h1>Products</h1>
+          <h1>{t("products")}</h1>
         </Col>
         <Col className="text-right">
           <Button className="my-3" onClick={createProductHandler}>
-            <i className="fas fa-plus"></i> Create Product
+            <i className="fas fa-plus"></i> {t("create-product")}
           </Button>
         </Col>
       </Row>
@@ -106,11 +109,12 @@ const ProductListPage = () => {
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>Price</th>
-                <th>CATEGORY</th>
-                <th>BRAND</th>
+                <th>{t("id")}</th>
+                <th>{t("name_")}</th>
+                <th>{t("price")}</th>
+                <th>{t("category")}</th>
+                <th>{t("brand")}</th>
+                <th>{t("action")}</th>
               </tr>
             </thead>
             <tbody>

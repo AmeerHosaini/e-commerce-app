@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
@@ -14,6 +15,7 @@ const ProfilePage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
+  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,61 +60,59 @@ const ProfilePage = () => {
   return (
     <Row>
       <Col md={3}>
-        <h2>User Profile</h2>
+        <h2>{t("user-profile")}</h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
-        {success && (
-          <Message variant="success">Profile Updated Successfully</Message>
-        )}
+        {success && <Message variant="success">{t("profile-updated")}</Message>}
         {loading && <Loader />}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>{t("name")}</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter Your Name"
+              placeholder={t("enter-name")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
           <Form.Group controlId="email">
-            <Form.Label className="mt-2">Email</Form.Label>
+            <Form.Label className="mt-2">{t("email-address")}</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter Your Email"
+              placeholder={t("enter-email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
           <Form.Group controlId="password">
-            <Form.Label className="mt-2">Password</Form.Label>
+            <Form.Label className="mt-2">{t("password")}</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter Your Password"
+              placeholder={t("enter-password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
           <Form.Group controlId="confirmPassword">
-            <Form.Label className="mt-2">Confirm Password</Form.Label>
+            <Form.Label className="mt-2">{t("confirm")}</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Confirm Password"
+              placeholder={t("confirm-password")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
 
           <Button className="mt-3" type="submit" variant="primary">
-            Update Profile
+            {t("update-profile")}
           </Button>
         </Form>
       </Col>
       <Col md={9}>
-        <h2>My Orders</h2>
+        <h2>{t("my-orders")}</h2>
         {loadingOrders ? (
           <Loader />
         ) : errorOrders ? (
@@ -121,11 +121,11 @@ const ProfilePage = () => {
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
+                <th>{t("id")}</th>
+                <th>{t("date")}</th>
+                <th>{t("total")}</th>
+                <th>{t("paid")}</th>
+                <th>{t("delivered")}</th>
                 <th></th>
               </tr>
             </thead>
@@ -152,7 +152,7 @@ const ProfilePage = () => {
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
                       <Button className="btn-sm" variant="primary">
-                        Details
+                        {t("details")}
                       </Button>
                     </LinkContainer>
                   </td>

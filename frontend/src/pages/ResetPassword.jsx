@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
@@ -10,6 +11,8 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const { t } = useTranslation();
 
   const { resetToken } = useParams();
 
@@ -26,7 +29,7 @@ const ResetPassword = () => {
       setTimeout(() => {
         setError("");
       }, 5000);
-      return setError("Please provide your password");
+      return setError(t("provide-password"));
     }
 
     if (password !== confirmPassword) {
@@ -35,7 +38,7 @@ const ResetPassword = () => {
       setTimeout(() => {
         setError("");
       }, 5000);
-      return setError("Passwords do not match");
+      return setError(t("password-incorrect"));
     }
 
     try {
@@ -61,35 +64,35 @@ const ResetPassword = () => {
 
   return (
     <FormContainer>
-      <h1>Reset Password</h1>
+      <h1>{t("reset-password")}</h1>
       {error && <Message variant="danger">{error}</Message>}
       {success && <Message variant="success">{success}</Message>}
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="password">
-          <Form.Label>New Password</Form.Label>
+          <Form.Label>{t("new-password")}</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter New Password"
+            placeholder={t("enter-new-password")}
             title={password}
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
         <Form.Group controlId="confirmPassword">
-          <Form.Label className="mt-2">Confirm Password</Form.Label>
+          <Form.Label className="mt-2">{t("confirm-password")}</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Confirm New Password"
+            placeholder={t("confirm-new-password")}
             title={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
         <Button className="mt-3" type="submit" variant="primary">
-          Reset Password
+          {t("reset-pass")}
         </Button>
       </Form>
       <Row className="mt-3">
-        <Col>{success && <Link to={"/login"}>Login</Link>}</Col>
+        <Col>{success && <Link to={"/login"}>{t("login")}</Link>}</Col>
       </Row>
     </FormContainer>
   );

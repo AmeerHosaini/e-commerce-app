@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
@@ -10,6 +11,7 @@ import { listProductDetails, updateProduct } from "../actions/productAction";
 import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 
 const ProductEditPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -95,9 +97,9 @@ const ProductEditPage = () => {
   return (
     <>
       <Link to="/admin/productList" className="btn btn-primary my-3">
-        Go Back
+        {t("go-back")}
       </Link>
-      <h1>Edit Product</h1>
+      <h1>{t("edit-product")}</h1>
       {loadingUpdate && <Loader />}
       {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
       <FormContainer>
@@ -108,30 +110,30 @@ const ProductEditPage = () => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>{t("name")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter name"
+                placeholder={t("enter-name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="price" className="my-3">
-              <Form.Label>Price</Form.Label>
+              <Form.Label>{t("price_")}</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter price"
+                placeholder={t("enter-price")}
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="image" className="my-3">
-              <Form.Label>Image</Form.Label>
+              <Form.Label>{t("image")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter image url"
+                placeholder={t("enter-image")}
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
@@ -142,47 +144,47 @@ const ProductEditPage = () => {
             </Form.Group>
 
             <Form.Group controlId="brand" className="my-3">
-              <Form.Label>Brand</Form.Label>
+              <Form.Label>{t("brand_")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter brand"
+                placeholder={t("enter-brand")}
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="countInStock" className="my-3">
-              <Form.Label>Count in stock</Form.Label>
+              <Form.Label>{t("count-in-stock")}</Form.Label>
               <Form.Control
                 type="number"
-                placeholder="Enter count in stock"
+                placeholder={t("enter-count-in-stock")}
                 value={countInStock}
                 onChange={(e) => setCountInStock(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="category" className="my-3">
-              <Form.Label>Category</Form.Label>
+              <Form.Label>{t("category_")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter category"
+                placeholder={t("enter-category")}
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="description" className="my-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>{t("description")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter description"
+                placeholder={t("enter-description")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Button type="submit" variant="primary">
-              Update Product
+              {t("update-product")}
             </Button>
           </Form>
         )}

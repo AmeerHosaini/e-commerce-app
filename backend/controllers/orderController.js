@@ -20,7 +20,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
   // We want to make sure orderItems comes in and it is not empty
   if (orderItems && orderItems.length === 0) {
-    throw new BadRequest("No order items");
+    throw new BadRequest("no-order-items", req);
   } else {
     const order = new OrderModel({
       orderItems,
@@ -43,15 +43,15 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @route GET /api/orders/:id
 // @access Private
 const getOrderById = asyncHandler(async (req, res) => {
-  const { id: orderId } = req.params;
+  // const { id: orderId } = req.params;
   // In addition to the order id, we want the user's name and email address that is associated with the id
   // populate will attach the fields we specify to the id
-  const order = await OrderModel.findOne({ _id: orderId }).populate(
+  const order = await OrderModel.findOne({ _id: req.params.id }).populate(
     "user",
     "name email"
   );
   if (!order) {
-    throw new NotFound(`No order was found with id ${orderId}`);
+    throw new NotFound("no-order", req, { id: req.params.id });
   }
   res.status(StatusCodes.OK).json(order);
 });
@@ -60,10 +60,9 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route patch /api/orders/:id/pay
 // @access Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  const { id: orderId } = req.params;
-  const order = await OrderModel.findOne({ _id: orderId });
+  const order = await OrderModel.findOne({ _id: req.params.id });
   if (!order) {
-    throw new NotFound(`No order was found with id ${orderId}`);
+    throw new NotFound("no-order", req, { id: req.params.id });
   }
   order.isPaid = true;
   order.paidAt = Date.now();
@@ -84,10 +83,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @route patch /api/orders/:id/deliver
 // @access Private/Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
-  const { id: orderId } = req.params;
-  const order = await OrderModel.findOne({ _id: orderId });
+  const order = await OrderModel.findOne({ _id: req.params.id });
   if (!order) {
-    throw new NotFound(`No order was found with id ${req.params.id}`);
+    throw new NotFound("no-order", req, { id: req.params.id });
   }
   order.isDelivered = true;
   order.deliveredAt = Date.now();

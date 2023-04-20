@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
@@ -10,6 +11,8 @@ import { listUsers, deleteUser } from "../actions/userActions";
 const UserListPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
@@ -51,11 +54,11 @@ const UserListPage = () => {
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>NAME</th>
-              <th>EMAIL</th>
-              <th>ADMIN</th>
-              <th>ID</th>
+              <th>{t("id")}</th>
+              <th>{t("name_")}</th>
+              <th>{t("email_")}</th>
+              <th>{t("admin_")}</th>
+              <th>{t("action")}</th>
             </tr>
           </thead>
           <tbody>

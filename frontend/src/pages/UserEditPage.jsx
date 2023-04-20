@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +13,7 @@ const UserEditPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,9 +54,9 @@ const UserEditPage = () => {
   return (
     <>
       <Link to="/admin/userlist" className="btn btn-primary my-3">
-        Go Back
+        {t("go-back")}
       </Link>
-      <h1>Edit User</h1>
+      <h1>{t("edit-user")}</h1>
       {loadingUpdate && <Loader />}
       {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
       <FormContainer>
@@ -65,20 +67,20 @@ const UserEditPage = () => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>{t("name")}</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter name"
+                placeholder={t("enter-name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
             <Form.Group controlId="email" className="my-3">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>{t("email")}</Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Enter email"
+                placeholder={t("enter-email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
@@ -87,13 +89,13 @@ const UserEditPage = () => {
             <Form.Group controlId="isAdmin" className="my-3">
               <Form.Check
                 type="checkbox"
-                label="Is Admin"
+                label={t("is-admin")}
                 checked={isAdmin}
                 onChange={(e) => setIsAdmin(e.target.checked)}
               ></Form.Check>
             </Form.Group>
             <Button type="submit" variant="primary">
-              Update User
+              {t("update-user")}
             </Button>
           </Form>
         )}

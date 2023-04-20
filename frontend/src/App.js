@@ -21,6 +21,8 @@ import OrderListPage from "./pages/OrderListPage";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./config/i18n";
 
 const App = () => {
   const lightTheme = "light";
@@ -51,53 +53,55 @@ const App = () => {
   }, [theme]);
 
   return (
-    <Router>
-      <Header theme={theme} toggleTheme={toggleTheme} />
-      <main className="py-3">
-        <Container>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/search/:keyword" element={<Home />} />
-            <Route path="/filter/:price" element={<Home />} />
-            <Route path="/page/:pageNumber" element={<Home />} />
-            <Route
-              path="/search/:keyword/page/:pageNumber"
-              element={<Home />}
-            />
-            <Route path="/product/:id" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/cart/:id" element={<CartPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgotpassword" element={<ForgotPassword />} />
-            <Route
-              path="/passwordreset/:resetToken"
-              element={<ResetPassword />}
-            />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/shipping" element={<ShippingPage />} />
-            <Route path="/login/shipping" element={<ShippingPage />} />
-            <Route path="/payment" element={<PaymentPage />} />
-            <Route path="/placeorder" element={<PlaceOrderPage />} />
-            <Route path="/order/:id" element={<OrderDetailsPage />} />
-            <Route path="/admin/userlist" element={<UserListPage />} />
-            <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
-            <Route path="/admin/productlist" element={<ProductListPage />} />
-            <Route
-              path="/admin/productlist/:pageNumber"
-              element={<ProductListPage />}
-            />
-            <Route
-              path="/admin/product/:id/edit"
-              element={<ProductEditPage />}
-            />
-            <Route path="/admin/orderlist" element={<OrderListPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Container>
-      </main>
-      <Footer />
-    </Router>
+    <I18nextProvider i18n={i18n}>
+      <Router>
+        <Header theme={theme} toggleTheme={toggleTheme} />
+        <main className="py-3">
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/search/:keyword" element={<Home />} />
+              <Route path="/filter/:price" element={<Home />} />
+              <Route path="/page/:pageNumber" element={<Home />} />
+              <Route
+                path="/search/:keyword/page/:pageNumber"
+                element={<Home />}
+              />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/cart/:id" element={<CartPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgotpassword" element={<ForgotPassword />} />
+              <Route
+                path="/passwordreset/:resetToken"
+                element={<ResetPassword />}
+              />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/shipping" element={<ShippingPage />} />
+              <Route path="/login/shipping" element={<ShippingPage />} />
+              <Route path="/payment" element={<PaymentPage />} />
+              <Route path="/placeorder" element={<PlaceOrderPage />} />
+              <Route path="/order/:id" element={<OrderDetailsPage />} />
+              <Route path="/admin/userlist" element={<UserListPage />} />
+              <Route path="/admin/user/:id/edit" element={<UserEditPage />} />
+              <Route path="/admin/productlist" element={<ProductListPage />} />
+              <Route
+                path="/admin/productlist/:pageNumber"
+                element={<ProductListPage />}
+              />
+              <Route
+                path="/admin/product/:id/edit"
+                element={<ProductEditPage />}
+              />
+              <Route path="/admin/orderlist" element={<OrderListPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Container>
+        </main>
+        <Footer />
+      </Router>
+    </I18nextProvider>
   );
 };
 

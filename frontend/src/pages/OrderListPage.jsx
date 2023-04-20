@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
@@ -10,6 +11,8 @@ import { listOrders } from "../actions/orderActions";
 const OrderListPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const orderList = useSelector((state) => state.orderList);
   const { loading, error, orders } = orderList;
@@ -42,12 +45,12 @@ const OrderListPage = () => {
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>USER</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
+              <th>{t("id")}</th>
+              <th>{t("user_")}</th>
+              <th>{t("date")}</th>
+              <th>{t("total")}</th>
+              <th>{t("paid")}</th>
+              <th>{t("delivered")}</th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +77,7 @@ const OrderListPage = () => {
                 <td>
                   <LinkContainer to={`/order/${order._id}`}>
                     <Button variant="primary" className="btn-sm">
-                      Details
+                      {t("details")}
                     </Button>
                   </LinkContainer>
                 </td>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Row,
@@ -24,10 +25,13 @@ const Products = () => {
   // const product = products.find((product) => product._id === params.id);
   // const [product, setProduct] = useState({});
 
+  const { t } = useTranslation();
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
+  const inStock = `${t("in-stock")}`;
+  const outOfStock = `${t("out-stock")}`;
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -70,7 +74,7 @@ const Products = () => {
   return (
     <>
       <Link className="btn btn-dark my-3 rounded" to="/">
-        Go Back
+        {t("go-back")}
       </Link>
       {loading ? (
         <Loader />
@@ -91,12 +95,14 @@ const Products = () => {
                 <ListGroupItem>
                   <Rating
                     value={product.rating}
-                    text={`${product.numReviews} reviews`}
+                    text={`${product.numReviews} ${t("reviews")}`}
                   />
                 </ListGroupItem>
-                <ListGroupItem>Price: ${product.price}</ListGroupItem>
                 <ListGroupItem>
-                  Description: {product.description}
+                  {t("price_")}: ${product.price}
+                </ListGroupItem>
+                <ListGroupItem>
+                  {t("description")}: {product.description}
                 </ListGroupItem>
               </ListGroup>
             </Col>
@@ -105,7 +111,7 @@ const Products = () => {
                 <ListGroup variant="flush">
                   <ListGroupItem>
                     <Row>
-                      <Col>Price:</Col>
+                      <Col>{t("price_")}:</Col>
                       <Col>
                         <strong>${product.price}</strong>
                       </Col>
@@ -113,16 +119,16 @@ const Products = () => {
                   </ListGroupItem>
                   <ListGroupItem>
                     <Row>
-                      <Col>Status:</Col>
+                      <Col>{t("status")}:</Col>
                       <Col>
-                        {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
+                        {product.countInStock > 0 ? inStock : outOfStock}
                       </Col>
                     </Row>
                   </ListGroupItem>
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
                       <Row>
-                        <Col className="my-2">Quantity:</Col>
+                        <Col className="my-2">{t("qty")}:</Col>
                         <Col>
                           <Form.Control
                             as="select"
@@ -149,7 +155,7 @@ const Products = () => {
                         type="button"
                         disabled={product.countInStock === 0}
                       >
-                        Add To Cart
+                        {t("add-to-cart")}
                       </Button>
                     </Row>
                   </ListGroupItem>
@@ -159,8 +165,10 @@ const Products = () => {
           </Row>
           <Row>
             <Col md={6} className="mt-3">
-              <h2>Reviews</h2>
-              {product.reviews.length === 0 && <Message>No reviews</Message>}
+              <h2>{t("reviews")}</h2>
+              {product.reviews.length === 0 && (
+                <Message>{t("no-reviews")}</Message>
+              )}
               <ListGroup variant="flush">
                 {product.reviews.map((review) => (
                   <ListGroup.Item key={review._id}>
@@ -171,29 +179,29 @@ const Products = () => {
                   </ListGroup.Item>
                 ))}
                 <ListGroup.Item>
-                  <h2>Post a customer review</h2>
+                  <h2>{t("post-review")}</h2>
                   {errorProductReview && (
                     <Message variant="danger">{errorProductReview}</Message>
                   )}
                   {userInfo ? (
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId="rating">
-                        <Form.Label>Rating</Form.Label>
+                        <Form.Label>{t("rating")}</Form.Label>
                         <Form.Control
                           as="select"
                           value={rating}
                           onChange={(e) => setRating(e.target.value)}
                         >
-                          <option value="">Select...</option>
-                          <option value="1">1 - Poor</option>
-                          <option value="2">2 - Fair</option>
-                          <option value="3">3 - Good</option>
-                          <option value="4">4 - Very Good</option>
-                          <option value="5">5 - Excellent</option>
+                          <option value="">{t("select")}</option>
+                          <option value="1">{t("poor")}</option>
+                          <option value="2">{t("fair")}</option>
+                          <option value="3">{t("good")}</option>
+                          <option value="4">{t("very-good")}</option>
+                          <option value="5">{t("excellent")}</option>
                         </Form.Control>
                       </Form.Group>
                       <Form.Group controlId="comment" className="my-3">
-                        <Form.Label>Comment</Form.Label>
+                        <Form.Label>{t("comment")}</Form.Label>
                         <Form.Control
                           as="textarea"
                           row="3"
@@ -202,16 +210,16 @@ const Products = () => {
                         ></Form.Control>
                       </Form.Group>
                       <Button type="submit" variant="primary">
-                        Post
+                        {t("post")}
                       </Button>
                     </Form>
                   ) : (
                     <Message>
-                      Please{" "}
+                      {t("please")}{" "}
                       <Link className="login-link" to="/login">
-                        sign in
+                        {t("sign-in_")}
                       </Link>{" "}
-                      to post a review
+                      {t("to-post-review")}
                     </Message>
                   )}
                 </ListGroup.Item>

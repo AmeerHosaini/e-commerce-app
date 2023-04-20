@@ -7,9 +7,7 @@ const Footer = () => {
     <footer>
       <Container>
         <Row>
-          <Col className="text-center font-weight-normal">
-            Copyright &copy; StoreHook {date}
-          </Col>
+          <Col className="text-center font-weight-normal">StoreHook {date}</Col>
         </Row>
       </Container>
     </footer>

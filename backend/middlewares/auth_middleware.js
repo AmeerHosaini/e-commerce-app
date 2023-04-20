@@ -9,7 +9,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
   // check if there is a token
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    throw new UnAuthenticated("Not authorized, no token");
+    throw new UnAuthenticated("not-authorized-no-token", req);
   }
 
   const token = authHeader.split(" ")[1];
@@ -19,7 +19,7 @@ const protect = asyncHandler(async (req, res, next) => {
     req.user = await User.findById(payload.id).select("-password");
     next();
   } catch (error) {
-    throw new UnAuthenticated("Not authorized, no token");
+    throw new UnAuthenticated("not-authorized-no-token", req);
   }
 });
 
@@ -27,7 +27,7 @@ const admin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
     next();
   } else {
-    throw new UnAuthenticated("Not authorized as an admin");
+    throw new UnAuthenticated("not-authorized-as-admin", req);
   }
 };
 

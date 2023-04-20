@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -7,6 +8,7 @@ import { addToCart, removeFromCart } from "../actions/cartAction";
 
 const CartPage = () => {
   const { id } = useParams();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const currentLocation = useLocation();
   const quantity = currentLocation.search
@@ -36,12 +38,12 @@ const CartPage = () => {
   return (
     <Row>
       <Col md={8}>
-        <h1>Shopping Cart</h1>
+        <h1>{t("cart")}</h1>
         {cartItems.length === 0 ? (
           <Message>
-            Your Cart is Empty{" "}
+            {t("cart-empty")}{" "}
             <Link className="login-link" to="/">
-              Go Back
+              {t("go-back")}
             </Link>
           </Message>
         ) : (
@@ -92,12 +94,12 @@ const CartPage = () => {
         <ListGroup variant="flush" className="card mt-5">
           <ListGroup.Item>
             <h2>
-              Subtotal (
+              {t("sub-total")} (
               {cartItems.reduce(
                 (acc, currentItem) => acc + currentItem.quantity,
                 0
               )}
-              ) items
+              ) {t("items")}
             </h2>
             $
             {cartItems
@@ -115,7 +117,7 @@ const CartPage = () => {
               disabled={cartItems.length === 0}
               onClick={checkoutHandler}
             >
-              Proceed To Checkout
+              {t("checkout")}
             </Button>
           </ListGroup.Item>
         </ListGroup>

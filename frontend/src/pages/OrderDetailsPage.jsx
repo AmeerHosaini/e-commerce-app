@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
@@ -18,6 +19,7 @@ import {
 
 const OrderDetailsPage = () => {
   const [sdkReady, setSdkReady] = useState(false);
+  const { t } = useTranslation();
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -99,49 +101,53 @@ const OrderDetailsPage = () => {
     <Message variant="danger">{error}</Message>
   ) : (
     <>
-      <h1>Order {order._id}</h1>
+      <h1>
+        {t("order")} {order._id}
+      </h1>
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h2>Shipping</h2>
+              <h2>{t("shipping")}</h2>
               <p>
-                <strong>Name: </strong> {order.user.name}
+                <strong>{t("shipping-name")} </strong> {order.user.name}
               </p>
               <p>
-                <strong>Email: </strong>{" "}
+                <strong>{t("shipping-email")} </strong>{" "}
                 <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
               <p>
-                <strong>Address: </strong>
+                <strong>{t("shipping-address")} </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city},{" "}
                 {order.shippingAddress.postalCode},{" "}
                 {order.shippingAddress.country}
               </p>
               {order.isDelivered ? (
                 <Message variant="success">
-                  Delivered {order.deliveredAt}
+                  {t("shipping-delivered")} {order.deliveredAt}
                 </Message>
               ) : (
-                <Message variant="danger">Not delivered</Message>
+                <Message variant="danger">{t("not-delivered")}</Message>
               )}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>Payment Method</h2>
+              <h2>{t("payment-method")}</h2>
               <p>
-                <strong>Method: </strong>
+                <strong>{t("method")}: </strong>
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
-                <Message variant="success">Paid on {order.paidAt}</Message>
+                <Message variant="success">
+                  {t("paid-on")} {order.paidAt}
+                </Message>
               ) : (
-                <Message variant="danger">Not paid</Message>
+                <Message variant="danger">{t("not-paid")}</Message>
               )}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>Order Items</h2>
+              <h2>{t("order-items")}</h2>
               {order.orderItems.length === 0 ? (
-                <Message>Your Order is Empty</Message>
+                <Message>{t("empty-order")}</Message>
               ) : (
                 <ListGroup variant="flush">
                   {order.orderItems.map((orderItem, index) => (
@@ -176,29 +182,29 @@ const OrderDetailsPage = () => {
           <Card>
             <ListGroup variant="flush">
               <ListGroup.Item>
-                <h2>Order Summary</h2>
+                <h2>{t("order-summary")}</h2>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Items</Col>
+                  <Col>{t("order-items_")}</Col>
                   <Col>${order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Shipping</Col>
+                  <Col>{t("shipping")}</Col>
                   <Col>${order.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Tax</Col>
+                  <Col>{t("tax")}</Col>
                   <Col>${order.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Total</Col>
+                  <Col>{t("total")}</Col>
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
@@ -226,7 +232,7 @@ const OrderDetailsPage = () => {
                       className="btn btn-block"
                       onClick={deliverHandler}
                     >
-                      Mark as delivered
+                      {t("mark-delivered")}
                     </Button>
                   </ListGroup.Item>
                 )}

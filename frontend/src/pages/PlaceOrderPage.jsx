@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +9,8 @@ import { createOrder } from "../actions/orderActions";
 
 const PlaceOrderPage = () => {
   const cart = useSelector((state) => state.cart);
+
+  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -64,23 +67,23 @@ const PlaceOrderPage = () => {
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              <h2>Shipping</h2>
+              <h2>{t("shipping")}</h2>
               <p>
-                <strong>Address: </strong>
+                <strong>{t("shipping-address")}: </strong>
                 {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
                 {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>Payment Method</h2>
-              <strong>Method: </strong>
+              <h2>{t("payment-method")}</h2>
+              <strong>{t("method")}: </strong>
               {cart.paymentMethod}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>Order Items</h2>
+              <h2>{t("order-items")}</h2>
               {cart.cartItems.length === 0 ? (
-                <Message>Your Cart is Empty</Message>
+                <Message>{t("cart-empty")}</Message>
               ) : (
                 <ListGroup variant="flush">
                   {cart.cartItems.map((cartItem, index) => (
@@ -115,29 +118,29 @@ const PlaceOrderPage = () => {
           <Card>
             <ListGroup variant="flush">
               <ListGroup.Item>
-                <h2>Order Summary</h2>
+                <h2>{t("order-summary")}</h2>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Items</Col>
+                  <Col>{t("order-items_")}</Col>
                   <Col>${cart.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Shipping</Col>
+                  <Col>{t("shipping")}</Col>
                   <Col>${cart.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Tax</Col>
+                  <Col>{t("tax")}</Col>
                   <Col>${cart.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Total</Col>
+                  <Col>{t("total")}</Col>
                   <Col>${cart.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
@@ -151,7 +154,7 @@ const PlaceOrderPage = () => {
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >
-                  Place Order
+                  {t("place-order")}
                 </Button>
               </ListGroup.Item>
             </ListGroup>

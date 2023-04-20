@@ -10,7 +10,7 @@ const asyncHandler = require("express-async-handler");
 const sendMail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const axios = require("axios");
-const { OAuth2Client } = require("google-auth-library");
+// const { OAuth2Client } = require("google-auth-library");
 
 // @desc Auth user and get token
 // @route POST /api/users/login
@@ -20,7 +20,7 @@ const authUser = asyncHandler(async (req, res) => {
 
   // Check if email and password exists
   if (!email || !password) {
-    throw new BadRequest("Please provide email and password");
+    throw new BadRequest("provide-email-password", req);
   }
 
   // Check for the user in the database
@@ -43,13 +43,13 @@ const authUser = asyncHandler(async (req, res) => {
   }*/
 
   if (!user) {
-    throw new UnAuthenticated("Invalid Email");
+    throw new UnAuthenticated("no-user", req);
   }
 
   const correctPassword = await user.comparePassword(password);
 
   if (!correctPassword) {
-    throw new UnAuthenticated("Password does not match");
+    throw new UnAuthenticated("password-does-not-match", req);
   }
 
   // create a token
@@ -168,7 +168,7 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   // failed Verification
   if (!email) {
-    throw new BadRequest("Email Verification Failed");
+    throw new BadRequest("email-verification-failed", req);
   }
 
   // passed verification
@@ -233,7 +233,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!user) {
-    throw new NotFound("User was not found");
+    throw new NotFound("user-not-found", req, {});
   }
 
   res.status(StatusCodes.OK).json({
@@ -253,13 +253,13 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    throw new BadRequest("User already exists");
+    throw new BadRequest("user-exists", req);
   }
   // if we dont have a middlware to hash our password, we have to hash it here before creating a document
   const user = await User.create({ name, email, password });
 
   if (!user) {
-    throw new BadRequest("Invalid user data");
+    throw new BadRequest("invalid-data", req);
   }
 
   const token = user.createJwt();
@@ -281,7 +281,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!user) {
-    throw new NotFound("User was not found");
+    throw new NotFound("user-not-found", req, {});
   } else if (user) {
     // if name wants to be updated, do it, otherwise, name stays the same
     user.name = req.body.name || user.name;
@@ -315,12 +315,11 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route DELETE /api/users/:id
 // @access Private/Admin
 const deleteUser = asyncHandler(async (req, res) => {
-  const { id: userId } = req.params;
-  const user = await User.findOneAndRemove({ _id: userId });
+  const user = await User.findOneAndRemove({ _id: req.params.id });
   if (!user) {
-    throw new NotFound(`The user with id ${userId} does not exist`);
+    throw new NotFound("user-does-not-exist", req, { id: req.params.id });
   }
-  res.status(StatusCodes.OK).json({ message: "User removed" });
+  res.status(StatusCodes.OK).json({ message: req.t("user-removed") });
 
   /* 
   const user = await User.findOne(req.params.id)
@@ -338,7 +337,7 @@ const getUserById = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
 
   if (!user) {
-    throw new NotFound(`The user with the id ${req.params.id} does not exist`);
+    throw new NotFound("user-does-not-exist", req, { id: req.params.id });
   }
 
   res.status(StatusCodes.OK).json(user);
@@ -350,7 +349,7 @@ const getUserById = asyncHandler(async (req, res) => {
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) {
-    throw new NotFound(`The user with the id ${req.params.id} does not exist`);
+    throw new NotFound("user-does-not-exist", req, { id: req.params.id });
   } else if (user) {
     // if there is a name, set it to user
     user.name = req.body.name || user.name;
@@ -374,7 +373,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw new NotFound("Email could not be found");
+    throw new NotFound("email-not-found", req);
   }
   // generate Token
   const resetToken = user.getResetPasswordToken();
@@ -398,13 +397,13 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     res.status(StatusCodes.OK).json({
       success: true,
-      data: "Email sent",
+      data: req.t("email-sent"),
     });
   } catch (error) {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
-    throw new ServerError("Email could not be sent");
+    throw new ServerError("email-not-sent", req);
   }
 });
 
@@ -424,7 +423,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   });
 
   if (!user) {
-    throw new BadRequest("Invalid Reset Token");
+    throw new BadRequest("invalid-reset-token", req);
   }
 
   // send the new password
@@ -438,7 +437,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   await user.save();
   res.status(StatusCodes.CREATED).json({
     success: true,
-    data: "Password Reset Success",
+    data: req.t("reset-success"),
   });
 });
 

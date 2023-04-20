@@ -1,13 +1,20 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/userActions";
 import SearchBox from "./SearchBox";
+import axios from "axios";
 
 const Header = ({ theme, toggleTheme }) => {
   // this gets userLogin part of our state
   // then, we destructure our states from userReducer
+
+  const [language, setLanguage] = useState("en");
+
+  const { i18n, t } = useTranslation();
 
   const lightTheme = "light";
   const darkTheme = "dark";
@@ -25,6 +32,21 @@ const Header = ({ theme, toggleTheme }) => {
     dispatch(logout());
   };
 
+  // language switcher
+  // const handleLanguageChange = (e) => {
+  //   const languageCode = e.target.value;
+  //   i18n.changeLanguage(languageCode);
+  //   setLanguage(languageCode);
+  //   // document.documentElement.dir = languageCode === "fa" ? "rtl" : "ltr";
+  // };
+
+  function handleLanguageChange(eventKey) {
+    i18n.changeLanguage(eventKey);
+    axios.defaults.headers.common["Accept-Language"] = eventKey;
+    setLanguage(eventKey);
+    document.documentElement.dir = eventKey === "fa" ? "rtl" : "ltr";
+  }
+
   return (
     <header>
       <Navbar bg={theme} variant={theme} expand="lg" collapseOnSelect>
@@ -40,7 +62,7 @@ const Header = ({ theme, toggleTheme }) => {
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart className={`mb-1 mr-2 ${textStyle}`} />
-                  <span className={textStyle}>Cart</span>
+                  <span className={textStyle}>{t("cart")}</span>
                 </Nav.Link>
               </LinkContainer>
               {userInfo || userGoogleInfo ? (
@@ -53,17 +75,17 @@ const Header = ({ theme, toggleTheme }) => {
                   id="username"
                 >
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>{t("profile")}</NavDropdown.Item>
                   </LinkContainer>
                   <NavDropdown.Item onClick={logoutHandler}>
-                    Log out
+                    {t("log-out")}
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link>
                     <FaUser className={`mb-1 mr-2 ${textStyle}`} />
-                    <span className={textStyle}>Sign In</span>
+                    <span className={textStyle}>{t("sign-in")}</span>
                   </Nav.Link>
                 </LinkContainer>
               )}
@@ -74,16 +96,28 @@ const Header = ({ theme, toggleTheme }) => {
                   id="adminMenu"
                 >
                   <LinkContainer to="/admin/userlist">
-                    <NavDropdown.Item>Users</NavDropdown.Item>
+                    <NavDropdown.Item>{t("users")}</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/admin/productlist">
-                    <NavDropdown.Item>Products</NavDropdown.Item>
+                    <NavDropdown.Item>{t("products")}</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/admin/orderlist">
-                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                    <NavDropdown.Item>{t("orders")}</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               ) : null}
+              <NavDropdown
+                title={<span className={textStyle}>{language}</span>}
+                onSelect={handleLanguageChange}
+              >
+                <NavDropdown.Item eventKey="en">English</NavDropdown.Item>
+                <NavDropdown.Item eventKey="fa">Farsi/Persian</NavDropdown.Item>
+              </NavDropdown>
+
+              {/* <select onChange={handleLanguageChange}>
+                <option value="en">en</option>
+                <option value="fa">fa</option>
+              </select> */}
               <Nav.Link onClick={toggleTheme}>
                 {theme === darkTheme ? (
                   <i className={`fas fa-sun ${textStyle}`}></i>

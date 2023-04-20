@@ -96,12 +96,12 @@ const getProducts = asyncHandler(async (req, res) => {
 // @route GET /api/products/:id
 // @access public
 const getProductById = asyncHandler(async (req, res) => {
-  const { id: productID } = req.params;
-  const product = await ProductModel.findOne({ _id: productID });
+  // const { id: productID } = req.params;
+  const product = await ProductModel.findOne({ _id: req.params.id });
 
   if (!product) {
     // Create a custom error --- This is when the formation of id is correct but the product with that id does not exist
-    throw new NotFound(`No product was found with id ${productID}`);
+    throw new NotFound("no-product", req, { id: req.params.id });
   }
 
   res.status(StatusCodes.OK).json(product);
@@ -115,13 +115,12 @@ const deleteProduct = asyncHandler(async (req, res) => {
     if (req.user._id === product.user._id) ---> Only admins that created the product can delete the product
   */
 
-  const { id: productId } = req.params;
-  const product = await ProductModel.findById(productId);
+  const product = await ProductModel.findById(req.params.id);
   if (product) {
     await product.remove();
-    res.status(StatusCodes.OK).json({ message: "Product removed" });
+    res.status(StatusCodes.OK).json({ message: req.t("product-removed") });
   } else {
-    throw new NotFound(`No product was found with id ${productId}`);
+    throw new NotFound("no-product", req, { id: req.params.id });
   }
 });
 
@@ -153,7 +152,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     req.body;
   const product = await ProductModel.findById(req.params.id);
   if (!product) {
-    throw new NotFound(`No product was found with id ${req.params.id}`);
+    throw new NotFound("no-product", req, { id: req.params.id });
   }
 
   product.name = name;
@@ -177,7 +176,7 @@ const createProductReview = asyncHandler(async (req, res) => {
   const product = await ProductModel.findById(req.params.id);
 
   if (!product) {
-    throw new NotFound(`No product found with id ${req.params.id}`);
+    throw new NotFound("no-product", req, { id: req.params.id });
   }
 
   // review.user is what we added to modal
@@ -186,7 +185,7 @@ const createProductReview = asyncHandler(async (req, res) => {
   );
 
   if (alreadyReviewed) {
-    throw new BadRequest("Product already reviewed");
+    throw new BadRequest("product-reviewed", req);
   }
 
   const review = {
@@ -206,7 +205,7 @@ const createProductReview = asyncHandler(async (req, res) => {
     product.reviews.length;
 
   await product.save();
-  res.status(StatusCodes.CREATED).json({ message: "Review added" });
+  res.status(StatusCodes.CREATED).json({ message: req.t("review-added") });
 });
 
 // @desc Get top rated products

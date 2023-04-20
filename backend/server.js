@@ -16,15 +16,34 @@ const userRoute = require("./routes/userRoute");
 const orderRoute = require("./routes/orderRoute");
 const uploadRoute = require("./routes/uploadRoutes");
 const errorHandlerMiddleware = require("./middlewares/error_handler");
-
 const app = express();
+const i18next = require("i18next");
+const Backend = require("i18next-fs-backend");
+const middleware = require("i18next-http-middleware");
 // connectDB() with the previous setup
+
+i18next
+  .use(Backend)
+  .use(middleware.LanguageDetector)
+  .init({
+    detection: {
+      order: ["header"],
+    },
+    fallbackLng: "fa",
+    backend: {
+      loadPath: __dirname + "/locales/{{lng}}/{{ns}}.json",
+    },
+    preload: ["en", "fa"],
+    ns: ["translation"],
+    defaultNS: "translation",
+  });
 
 // Logger
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+app.use(middleware.handle(i18next));
 // body parser
 app.use(express.json());
 

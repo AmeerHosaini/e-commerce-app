@@ -27,7 +27,13 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.statusCode = 400;
   }
 
-  return res.status(customError.statusCode).json({ msg: customError.msg });
+  const errorMessage = req.t(customError.msg);
+
+  return res.status(customError.statusCode).json({ msg: errorMessage });
 };
 
 module.exports = errorHandlerMiddleware;
+
+// req.t(custmError.msg)
+// this.message = "invalid-request" (key)
+// Whatever message is displayed on the error will be generated in the error handler

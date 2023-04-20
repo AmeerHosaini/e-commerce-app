@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button, Col, Row } from "react-bootstrap";
 import {
   Grid,
@@ -68,6 +69,9 @@ const Home = () => {
   const [error, setError] = useState("");
   const [page, setPage] = useState(null);
   const [pages, setPages] = useState(null);
+
+  // translation
+  const { t } = useTranslation();
 
   const updateUiValues = (uiValues) => {
     setSliderMax(uiValues.maxPrice);
@@ -217,7 +221,7 @@ const Home = () => {
         <ProductCarousel />
       ) : (
         <Link to="/" className="btn btn-dark">
-          Go Back
+          {t("go-back")}
         </Link>
       )}
       {/* Filtering */}
@@ -225,7 +229,7 @@ const Home = () => {
         <Grid container>
           <Grid item xs={12} sm={6}>
             <Typography gutterBottom className="mui-font">
-              Filters
+              {t("filters")}
             </Typography>
             <Filters>
               <Slider
@@ -241,7 +245,7 @@ const Home = () => {
                 <TextField
                   size="small"
                   id="lower"
-                  label="Min price"
+                  label={t("min-price")}
                   variant="outlined"
                   type="number"
                   disabled={loading}
@@ -252,7 +256,7 @@ const Home = () => {
                 <TextField
                   size="small"
                   id="upper"
-                  label="Max price"
+                  label={t("max-price")}
                   variant="outlined"
                   type="number"
                   disabled={loading}
@@ -265,7 +269,7 @@ const Home = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography gutterBottom className="mui-font">
-              Sort By
+              {t("sort_by")}
             </Typography>
             <FormControl component="fieldset">
               <RadioGroup
@@ -278,23 +282,23 @@ const Home = () => {
                   disabled={loading}
                   control={<Radio />}
                   value="descending"
-                  label="Price: Highest - Lowest"
+                  label={t("price-highest-to-lowest")}
                 />
                 <FormControlLabel
                   disabled={loading}
                   control={<Radio />}
                   value="ascending"
-                  label="Price: Lowest - Highest"
+                  label={t("price-lowest-to-highest")}
                 />
               </RadioGroup>
             </FormControl>
           </Grid>
         </Grid>
         <Button className="btn btn-primary" onClick={clearAllFilters}>
-          Clear All
+          {t("clear-all")}
         </Button>
       </StyledPaper>
-      <h1 className={`mt-3`}>Latest Products</h1>
+      <h1 className={`mt-3`}>{t("latest_products")}</h1>
       {loading ? (
         <Loader />
       ) : error ? (

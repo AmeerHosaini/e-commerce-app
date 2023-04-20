@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +16,7 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState(null);
+  const { t } = useTranslation();
 
   const dispatch = useDispatch();
   const userRegister = useSelector((state) => state.userRegister);
@@ -49,38 +51,38 @@ const RegisterPage = () => {
 
   return (
     <FormContainer>
-      <h1>Sign Up</h1>
+      <h1>{t("sign-up")}</h1>
       {message && <Message variant="danger">{message}</Message>}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
 
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="name">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>{t("name")}</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter Your Name"
+            placeholder={t("enter-name")}
             value={name}
             onChange={(e) => setName(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="email">
-          <Form.Label className="mt-2">Email</Form.Label>
+          <Form.Label className="mt-2">{t("email-address")}</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter Your Email"
+            placeholder={t("enter-email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
         <Form.Group controlId="password">
-          <Form.Label className="mt-2">Password</Form.Label>
+          <Form.Label className="mt-2">{t("password")}</Form.Label>
           <div style={{ position: "relative" }}>
             <Form.Control
               type={isVisible ? "text" : "password"}
-              placeholder="Enter password"
+              placeholder={t("enter-password")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
@@ -101,11 +103,11 @@ const RegisterPage = () => {
         </Form.Group>
 
         <Form.Group controlId="confirmPassword">
-          <Form.Label className="mt-2">Confirm Password</Form.Label>
+          <Form.Label className="mt-2">{t("confirm")}</Form.Label>
           <div style={{ position: "relative" }}>
             <Form.Control
               type={isVisible ? "text" : "password"}
-              placeholder="Enter password"
+              placeholder={t("confirm-password")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
@@ -126,15 +128,15 @@ const RegisterPage = () => {
         </Form.Group>
 
         <Button className="mt-3" type="submit" variant="primary">
-          Register
+          {t("register")}
         </Button>
       </Form>
 
       <Row className="py-3">
         <Col>
-          Already have an account?{" "}
+          {t("already-have-account")}{" "}
           <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-            Sign In
+            {t("sign-in")}
           </Link>
         </Col>
       </Row>

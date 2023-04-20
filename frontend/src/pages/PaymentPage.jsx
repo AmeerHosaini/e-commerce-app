@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +11,8 @@ const PaymentPage = () => {
   // We want this, because we would want to redirect if there is no shipping address
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
+
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -31,15 +34,15 @@ const PaymentPage = () => {
   return (
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
-      <h1>Payment Method</h1>
+      <h1>{t("payment-method")}</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group>
-          <Form.Label as="legend">Select Method</Form.Label>
+          <Form.Label as="legend">{t("select-method")}</Form.Label>
         </Form.Group>
         <Col className="my-3">
           <Form.Check
             type="radio"
-            label="PayPal or Credit Cart"
+            label={t("payment-label")}
             id="PayPal"
             name="paymentMethod"
             value="PayPal"
@@ -48,7 +51,7 @@ const PaymentPage = () => {
           ></Form.Check>
         </Col>
         <Button className="mt-3" type="submit" variant="primary">
-          Continue
+          {t("continue")}
         </Button>
       </Form>
     </FormContainer>
