@@ -51,7 +51,7 @@ const ProfilePage = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
+      setMessage(t("passwords-do-not-match"));
     } else {
       dispatch(updateUserProfile({ id: user._id, name, email, password }));
     }

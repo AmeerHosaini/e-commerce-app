@@ -39,7 +39,7 @@ const RegisterPage = () => {
     e.preventDefault();
     // Check the password
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
+      setMessage(t("passwords-do-not-match"));
     } else {
       dispatch(register(name, email, password));
     }

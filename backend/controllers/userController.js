@@ -10,6 +10,7 @@ const asyncHandler = require("express-async-handler");
 const sendMail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const axios = require("axios");
+const validateEmail = require("../utils/validateEmail");
 // const { OAuth2Client } = require("google-auth-library");
 
 // @desc Auth user and get token
@@ -249,6 +250,26 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+
+  if (!name) {
+    throw new BadRequest("name-required", req);
+  }
+
+  if (!email) {
+    throw new BadRequest("email-required", req);
+  }
+
+  if (!password) {
+    throw new BadRequest("password-required", req);
+  }
+
+  if (!validateEmail(email)) {
+    throw new BadRequest("valid-email", req);
+  }
+
+  if (password.length < 6) {
+    throw new BadRequest("password-small", req);
+  }
 
   const userExists = await User.findOne({ email });
 

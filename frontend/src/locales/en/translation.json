@@ -150,5 +150,7 @@
 
   "in-stock": "In Stock",
   "out-stock": "Out of Stock",
-  "is-admin": "Is Admin"
+  "is-admin": "Is Admin",
+
+  "passwords-do-not-match": "Passwords do not match"
 }

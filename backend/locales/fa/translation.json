@@ -20,5 +20,10 @@
   "no-order-items": "سفارش محصولی وجود ندارد",
   "no-order": "سفارشی با شناسه {{id}} پیدا نشد",
   "not-authorized-no-token": "صلاحیت داده نشد، توکن وجود ندارد",
-  "not-authorized-as-admin": "به عنوان ادمین صلاحیت داده نشد"
+  "not-authorized-as-admin": "به عنوان ادمین صلاحیت داده نشد",
+  "name-required": "لطفا نام خود را وارد کنید",
+  "email-required": "لطفا ایمیل خود را وارد کنید",
+  "password-required": "لطفا رمز عبور خود را وارد کنید",
+  "password-small": "رمز عبور حداقل 6 حرف باید باشد",
+  "valid-email": "لطفا ایمیل درستی را وارد کنید"
 }
