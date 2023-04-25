@@ -128,16 +128,48 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route POST /api/products/
 // @access private/Admin
 const createProduct = asyncHandler(async (req, res) => {
+  // const product = new ProductModel({
+  //   name: "Sample name",
+  //   price: 0,
+  //   user: req.user._id,
+  //   image: "/images/sample.jpg",
+  //   brand: "Sample brand",
+  //   category: "Sample category",
+  //   countInStock: 0,
+  //   numReviews: 0,
+  //   description: "Sample description",
+  // });
+
+  // const createdProduct = await product.save();
+  // res.status(StatusCodes.CREATED).json(createdProduct);
+  // const {
+  //   name,
+  //   name_fa,
+  //   price,
+  //   brand,
+  //   brand_fa,
+  //   category,
+  //   category_fa,
+  //   countInStock,
+  //   numReviews,
+  //   description,
+  //   description_fa,
+  // } = req.body;
+
   const product = new ProductModel({
-    name: "Sample name",
+    name: "Name",
+    name_fa: "نام",
     price: 0,
     user: req.user._id,
     image: "/images/sample.jpg",
-    brand: "Sample brand",
-    category: "Sample category",
+    brand: "Brand",
+    brand_fa: "نام تجاری",
+    category: "Category",
+    category_fa: "کتگوری",
     countInStock: 0,
     numReviews: 0,
-    description: "Sample description",
+    description: "Description",
+    description_fa: "توضیحات",
   });
 
   const createdProduct = await product.save();
@@ -148,19 +180,34 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route PATCH /api/products/:id
 // @access private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, image, brand, category, countInStock } =
-    req.body;
+  const {
+    name,
+    name_fa,
+    price,
+    description,
+    description_fa,
+    image,
+    brand,
+    brand_fa,
+    category,
+    category_fa,
+    countInStock,
+  } = req.body;
   const product = await ProductModel.findById(req.params.id);
   if (!product) {
     throw new NotFound("no-product", req, { id: req.params.id });
   }
 
   product.name = name;
+  product.name_fa = name_fa;
   product.price = price;
   product.description = description;
+  product.description_fa = description_fa;
   product.image = image;
   product.brand = brand;
+  product.brand_fa = brand_fa;
   product.category = category;
+  product.category_fa = category_fa;
   product.countInStock = countInStock;
 
   const updatedProduct = await product.save();

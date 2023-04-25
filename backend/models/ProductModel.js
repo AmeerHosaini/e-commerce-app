@@ -44,6 +44,12 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
 
+  // for Farsi
+  name_fa: {
+    type: String,
+    required: true,
+  },
+
   image: {
     type: String,
     required: true,
@@ -54,12 +60,27 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
 
+  brand_fa: {
+    type: String,
+    required: true,
+  },
+
   category: {
     type: String,
     required: true,
   },
 
+  category_fa: {
+    type: String,
+    required: true,
+  },
+
   description: {
+    type: String,
+    required: true,
+  },
+
+  description_fa: {
     type: String,
     required: true,
   },
