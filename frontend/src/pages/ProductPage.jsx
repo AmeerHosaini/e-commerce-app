@@ -44,6 +44,12 @@ const Products = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { userInfo: userGoogleInfo } = userGoogleLogin;
+
+  const changeLang = useSelector((state) => state.changeLang);
+  const { lang } = changeLang;
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -90,7 +96,7 @@ const Products = () => {
             <Col md={3}>
               <ListGroup variant="flush" className="card">
                 <ListGroupItem>
-                  <h3>{product.name}</h3>
+                  <h3>{lang === "en" ? product.name : product.name_fa}</h3>
                 </ListGroupItem>
                 <ListGroupItem>
                   <Rating
@@ -102,7 +108,9 @@ const Products = () => {
                   {t("price_")}: ${product.price}
                 </ListGroupItem>
                 <ListGroupItem>
-                  {t("description")}: {product.description}
+                  {t("description")}: {""}
+                  <br />
+                  {lang === "en" ? product.description : product.description_fa}
                 </ListGroupItem>
               </ListGroup>
             </Col>
@@ -183,7 +191,7 @@ const Products = () => {
                   {errorProductReview && (
                     <Message variant="danger">{errorProductReview}</Message>
                   )}
-                  {userInfo ? (
+                  {userInfo || userGoogleInfo ? (
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId="rating">
                         <Form.Label>{t("rating")}</Form.Label>

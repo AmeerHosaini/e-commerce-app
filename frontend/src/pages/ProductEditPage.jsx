@@ -17,12 +17,16 @@ const ProductEditPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
+  const [name_fa, setName_fa] = useState("");
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
+  const [brand_fa, setBrand_fa] = useState("");
   const [category, setCategory] = useState("");
+  const [category_fa, setCategory_fa] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
+  const [description_fa, setDescription_fa] = useState("");
   const [uploading, setUploading] = useState(false);
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -45,12 +49,16 @@ const ProductEditPage = () => {
         dispatch(listProductDetails(id));
       } else {
         setName(product.name);
+        setName_fa(product.name_fa);
         setPrice(product.price);
         setImage(product.image);
         setBrand(product.brand);
+        setBrand_fa(product.brand_fa);
         setCategory(product.category);
+        setCategory_fa(product.category_fa);
         setCountInStock(product.setCountInStock);
         setDescription(product.description);
+        setDescription_fa(product.description_fa);
       }
     }
   }, [dispatch, product, id, navigate, successUpdate]);
@@ -84,11 +92,15 @@ const ProductEditPage = () => {
       updateProduct({
         _id: id,
         name,
+        name_fa,
         price,
         brand,
+        brand_fa,
         image,
         category,
+        category_fa,
         description,
+        description_fa,
         countInStock,
       })
     );
@@ -110,12 +122,20 @@ const ProductEditPage = () => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
-              <Form.Label>{t("name")}</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder={t("enter-name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="name_fa" className="my-3">
+              <Form.Label>نام به فارسی</Form.Label>
+              <Form.Control
+                type="text"
+                value={name_fa}
+                onChange={(e) => setName_fa(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
@@ -144,12 +164,20 @@ const ProductEditPage = () => {
             </Form.Group>
 
             <Form.Group controlId="brand" className="my-3">
-              <Form.Label>{t("brand_")}</Form.Label>
+              <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
-                placeholder={t("enter-brand")}
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="brand_fa">
+              <Form.Label>نام تجاری - Brand</Form.Label>
+              <Form.Control
+                type="text"
+                value={brand_fa}
+                onChange={(e) => setBrand_fa(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
@@ -164,26 +192,42 @@ const ProductEditPage = () => {
             </Form.Group>
 
             <Form.Group controlId="category" className="my-3">
-              <Form.Label>{t("category_")}</Form.Label>
+              <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
-                placeholder={t("enter-category")}
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="description" className="my-3">
-              <Form.Label>{t("description")}</Form.Label>
+            <Form.Group controlId="category_fa">
+              <Form.Label>کتگوری</Form.Label>
               <Form.Control
                 type="text"
-                placeholder={t("enter-description")}
+                value={category_fa}
+                onChange={(e) => setCategory_fa(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="description" className="my-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
             </Form.Group>
 
-            <Button type="submit" variant="primary">
+            <Form.Group controlId="description_fa">
+              <Form.Label>توضیحات</Form.Label>
+              <Form.Control
+                type="text"
+                value={description_fa}
+                onChange={(e) => setDescription_fa(e.target.value)}
+              ></Form.Control>
+            </Form.Group>
+
+            <Button type="submit" variant="primary" className="my-3">
               {t("update-product")}
             </Button>
           </Form>

@@ -110,10 +110,13 @@ const ProductListPage = () => {
             <thead>
               <tr>
                 <th>{t("id")}</th>
-                <th>{t("name_")}</th>
+                <th>Name</th>
+                <th>نام</th>
                 <th>{t("price")}</th>
-                <th>{t("category")}</th>
-                <th>{t("brand")}</th>
+                <th>Category</th>
+                <th>کتگوری</th>
+                <th>Brand</th>
+                <th>نام تجاری</th>
                 <th>{t("action")}</th>
               </tr>
             </thead>
@@ -122,18 +125,21 @@ const ProductListPage = () => {
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
+                  <td>{product.name_fa}</td>
                   <td>${product.price}</td>
                   <td>{product.category}</td>
+                  <td>{product.category_fa}</td>
                   <td>{product.brand}</td>
+                  <td>{product.brand_fa}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="primary" className="btn-sm">
+                      <Button variant="primary" className="w-100 btn-sm">
                         <i className="fas fa-edit"></i>
                       </Button>
                     </LinkContainer>
                     <Button
                       variant="danger"
-                      className="btn-sm"
+                      className="w-100 btn-sm"
                       onClick={() => deleteHandler(product._id)}
                     >
                       <i className="fas fa-trash"></i>

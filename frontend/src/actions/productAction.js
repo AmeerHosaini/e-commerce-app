@@ -161,13 +161,27 @@ export const createReview =
         userLogin: { userInfo },
       } = getState();
 
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      };
+      const {
+        userGoogleLogin: { userInfo: userGoogleInfo },
+      } = getState();
 
+      let config;
+
+      if (userInfo) {
+        config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        };
+      } else if (userGoogleInfo) {
+        config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userGoogleInfo.token}`,
+          },
+        };
+      }
       await axios.post(`/api/products/${productId}/reviews`, review, config);
 
       dispatch({ type: PRODUCT_CREATE_REVIEW_SUCCESS });

@@ -151,5 +151,18 @@
   "in-stock": "موجود در انبار",
   "out-stock": "نا موجود در انبار",
   "is-admin": "ادمین شود",
-  "passwords-does-not-match": "رمز های عبور مشابه نیستند"
+  "passwords-does-not-match": "رمز های عبور مشابه نیستند",
+
+  "name-fa": "نام به فارسی",
+  "enter-fa-name": "نام محصول به فارسی",
+  "enter-en-name": "نام محصول به انگلیسی",
+  "brand-fa": "نام تجاری به فارسی",
+  "enter-en-brand": "نام تجاری محصول به انگلیسی",
+  "enter-fa-brand": "نام تجاری محصول به فارسی",
+  "category-fa": "کتگوری به فارسی",
+  "enter-en-category": "کتگوری محصول به انگلیسی",
+  "enter-fa-category": "کتگوری محصول به فارسی",
+  "description-fa": "توضیحات به فارسی",
+  "enter-en-description": "توضیحات محصول به انگلیسی",
+  "enter-fa-description": "توضیحات محصول به فارسی"
 }

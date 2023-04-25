@@ -30,6 +30,8 @@ import {
   orderListReducer,
 } from "./reducers/orderReducers";
 
+import { changeLangReducer } from "./reducers/langReducers";
+
 // We must always add our reducers to the store
 
 const reducer = combineReducers({
@@ -58,6 +60,7 @@ const reducer = combineReducers({
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  changeLang: changeLangReducer,
 });
 
 // We can get our cartItems from here, or tokens.

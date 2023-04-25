@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../actions/userActions";
+import { changeLanguage } from "../actions/langActions";
 import SearchBox from "./SearchBox";
 import axios from "axios";
 
@@ -26,6 +27,9 @@ const Header = ({ theme, toggleTheme }) => {
   const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
   const { userInfo: userGoogleInfo } = userGoogleLogin;
 
+  const changeLang = useSelector((state) => state.changeLang);
+  const { lang } = changeLang;
+
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
@@ -43,8 +47,9 @@ const Header = ({ theme, toggleTheme }) => {
   function handleLanguageChange(eventKey) {
     i18n.changeLanguage(eventKey);
     axios.defaults.headers.common["Accept-Language"] = eventKey;
-    setLanguage(eventKey);
-    document.documentElement.dir = eventKey === "fa" ? "rtl" : "ltr";
+    // setLanguage(eventKey);
+    dispatch(changeLanguage(eventKey));
+    // document.documentElement.dir = eventKey === "fa" ? "rtl" : "ltr";
   }
 
   return (
@@ -107,7 +112,7 @@ const Header = ({ theme, toggleTheme }) => {
                 </NavDropdown>
               ) : null}
               <NavDropdown
-                title={<span className={textStyle}>{language}</span>}
+                title={<span className={textStyle}>{lang}</span>}
                 onSelect={handleLanguageChange}
               >
                 <NavDropdown.Item eventKey="en">English</NavDropdown.Item>
