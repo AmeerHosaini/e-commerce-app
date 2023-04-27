@@ -7,11 +7,139 @@ const {
   ServerError,
 } = require("../errors/index");
 const asyncHandler = require("express-async-handler");
-const sendMail = require("../utils/sendEmail");
+const { sendEmailRegister, sendMail } = require("../utils/sendEmail");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const validateEmail = require("../utils/validateEmail");
+const createToken = require("../utils/createToken");
+const UserModel = require("../models/UserModel");
 // const { OAuth2Client } = require("google-auth-library");
+
+// @desc Register a new user - allows the user to access the website's functionality
+// @route POST /api/users
+// @access Public
+// const registerUser = asyncHandler(async (req, res) => {
+//   const { name, email, password } = req.body;
+
+//   if (!name) {
+//     throw new BadRequest("name-required", req);
+//   }
+
+//   if (!email) {
+//     throw new BadRequest("email-required", req);
+//   }
+
+//   if (!password) {
+//     throw new BadRequest("password-required", req);
+//   }
+
+//   if (!validateEmail(email)) {
+//     throw new BadRequest("valid-email", req);
+//   }
+
+//   if (password.length < 6) {
+//     throw new BadRequest("password-small", req);
+//   }
+
+//   const userExists = await User.findOne({ email });
+
+//   if (userExists) {
+//     throw new BadRequest("user-exists", req);
+//   }
+//   // if we dont have a middlware to hash our password, we have to hash it here before creating a document
+//   const user = await User.create({ name, email, password });
+
+//   if (!user) {
+//     throw new BadRequest("invalid-data", req);
+//   }
+
+//   const token = user.createJwt();
+
+//   res.status(StatusCodes.CREATED).json({
+//     _id: user.id,
+//     name: user.name,
+//     email: user.email,
+//     isAdmin: user.isAdmin,
+//     token,
+//   });
+// });
+
+// @desc Register a new user - Only sends the message to the user to check his email
+// @route POST /api/users
+// @access Public
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name) {
+    throw new BadRequest("name-required", req);
+  }
+
+  if (!email) {
+    throw new BadRequest("email-required", req);
+  }
+
+  if (!password) {
+    throw new BadRequest("password-required", req);
+  }
+
+  if (!validateEmail(email)) {
+    throw new BadRequest("valid-email", req);
+  }
+
+  if (password.length < 6) {
+    throw new BadRequest("password-small", req);
+  }
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    throw new BadRequest("user-exists", req);
+  }
+
+  // create a token
+  const newUser = { name, email, password };
+  const activation_token = createToken.activation(newUser);
+
+  // send email
+  const url = `http://localhost:3000/activate/${activation_token}`;
+  sendEmailRegister(email, url, "Verify Your Email");
+
+  // registeration success
+  res.status(200).json({ msg: "Welcome! Please Check Your Email" });
+});
+
+// @desc Register a new user
+// @route POST /api/users/activate
+// @access Public
+const activate = asyncHandler(async (req, res) => {
+  // get the token
+  const { activation_token } = req.body;
+
+  // verify the token
+  const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN);
+  const { name, email, password } = user;
+
+  // check the user
+  const userExists = await UserModel.findOne({ email });
+  if (userExists) {
+    throw new BadRequest("user-exists", req);
+  }
+
+  // Add User
+  const newUser = new UserModel({
+    name,
+    email,
+    password,
+  });
+
+  await newUser.save();
+
+  // activation success
+  res
+    .status(200)
+    .json({ msg: "Your account has been activated, you can now sign in" });
+});
 
 // @desc Auth user and get token
 // @route POST /api/users/login
@@ -245,55 +373,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc Register a new user
-// @route POST /api/users
-// @access Public
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
-
-  if (!name) {
-    throw new BadRequest("name-required", req);
-  }
-
-  if (!email) {
-    throw new BadRequest("email-required", req);
-  }
-
-  if (!password) {
-    throw new BadRequest("password-required", req);
-  }
-
-  if (!validateEmail(email)) {
-    throw new BadRequest("valid-email", req);
-  }
-
-  if (password.length < 6) {
-    throw new BadRequest("password-small", req);
-  }
-
-  const userExists = await User.findOne({ email });
-
-  if (userExists) {
-    throw new BadRequest("user-exists", req);
-  }
-  // if we dont have a middlware to hash our password, we have to hash it here before creating a document
-  const user = await User.create({ name, email, password });
-
-  if (!user) {
-    throw new BadRequest("invalid-data", req);
-  }
-
-  const token = user.createJwt();
-
-  res.status(StatusCodes.CREATED).json({
-    _id: user.id,
-    name: user.name,
-    email: user.email,
-    isAdmin: user.isAdmin,
-    token,
-  });
-});
-
 // @desc Update user profile
 // @route Patch /api/users/profile
 // @access Private
@@ -463,10 +542,11 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  registerUser,
+  activate,
   authUser,
   googleLogin,
   getUserProfile,
-  registerUser,
   updateUserProfile,
   getUsers,
   deleteUser,
