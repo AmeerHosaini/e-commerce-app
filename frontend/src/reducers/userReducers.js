@@ -64,6 +64,7 @@ export const userRegisterReducer = (state = {}, action) => {
     case USER_REGISTER_REQUEST:
       return { loading: true };
     case USER_REGISTER_SUCCESS:
+      // userInfo pertains to the payload (basically whatever we are sending from the server. In register case, we used to send name, email, password, id, token, isAdmin)
       return { loading: false, userInfo: action.payload };
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };

@@ -23,6 +23,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./config/i18n";
+import ActivatePage from "./pages/ActivatePage";
 
 const App = () => {
   const lightTheme = "light";
@@ -72,6 +73,10 @@ const App = () => {
               <Route path="/cart/:id" element={<CartPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/activate/:activation_token"
+                element={<ActivatePage />}
+              />
               <Route path="/forgotpassword" element={<ForgotPassword />} />
               <Route
                 path="/passwordreset/:resetToken"

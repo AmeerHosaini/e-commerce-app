@@ -1,13 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { register } from "../actions/userActions";
+// import { register } from "../actions/userActions";
+import axios from "axios";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -16,24 +17,47 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  const dispatch = useDispatch();
-  const userRegister = useSelector((state) => state.userRegister);
-  const { loading, userInfo, error } = userRegister;
+  // const dispatch = useDispatch();
+  // const userRegister = useSelector((state) => state.userRegister);
+  // const { loading, userInfo, error } = userRegister;
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  // We want to redirect
+  // We want to redirect --- Basically if we register, after our data is submitted to the db, we should see something. That would be the home page not the register page
   // We dont want to come to the registration page if we are registered
-  useEffect(() => {
-    // if user is not logged in, it will be null
-    if (userInfo) {
-      navigate(redirect);
+  // useEffect(() => {
+  //   // if user is not logged in, it will be null
+  //   if (userInfo) {
+  //     navigate(redirect);
+  //   }
+  // }, [navigate, userInfo, redirect]);
+  // In the activation case, we don't want to go anywhere and stay in the registeration page until the user opens his email and activate account.
+
+  const register = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post("/api/users", {
+        name,
+        email,
+        password,
+      });
+      setMessage(res.data.msg);
+      setLoading(false);
+    } catch (error) {
+      setError(
+        error.response && error.response.data.msg
+          ? error.response.data.msg
+          : error.msg
+      );
+      setLoading(false);
     }
-  }, [navigate, userInfo, redirect]);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -41,7 +65,8 @@ const RegisterPage = () => {
     if (password !== confirmPassword) {
       setMessage(t("passwords-do-not-match"));
     } else {
-      dispatch(register(name, email, password));
+      // dispatch(register(name, email, password));
+      register();
     }
   };
 
