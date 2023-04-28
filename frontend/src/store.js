@@ -15,6 +15,7 @@ import {
   userLoginReducer,
   userGoogleLoginReducer,
   userRegisterReducer,
+  userActivateReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
   userListReducer,
@@ -49,6 +50,7 @@ const reducer = combineReducers({
   // useSelect(state => state.userRegister)
   // Then, we destructure the states that are in the userReducer from userRegister
   userRegister: userRegisterReducer,
+  userActivate: userActivateReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userList: userListReducer,

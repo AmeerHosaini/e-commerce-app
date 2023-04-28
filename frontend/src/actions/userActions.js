@@ -10,6 +10,9 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_ACTIVATE_REQUEST,
+  USER_ACTIVATE_SUCCESS,
+  USER_ACTIVATE_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
@@ -29,11 +32,6 @@ import {
   USER_UPDATE_SUCCESS,
 } from "../constants/userConstant";
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstant";
-import {
-  CART_RESET_ITEM,
-  CART_SAVE_PAYMENT_METHOD_RESET,
-  CART_SAVE_SHIPPING_ADDRESS_RESET,
-} from "../constants/CartConstants";
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -111,23 +109,45 @@ export const logout = () => (dispatch) => {
   document.location.href = "/login";
 };
 
+// export const register = (name, email, password) => async (dispatch) => {
+//   try {
+//     dispatch({ type: USER_REGISTER_REQUEST });
+//     const config = {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const { data } = await axios.post(
+//       "/api/users",
+//       { name, email, password },
+//       config
+//     );
+//     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
+//     // After user registers, login the user rightaway
+//     dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+//     localStorage.setItem("userInfo", JSON.stringify(data));
+//   } catch (error) {
+//     dispatch({
+//       type: USER_REGISTER_FAIL,
+//       payload:
+//         error.response && error.response.data.msg
+//           ? error.response.data.msg
+//           : error.msg,
+//     });
+//   }
+// };
+
+// We want to send a token
+
 export const register = (name, email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_REGISTER_REQUEST });
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const { data } = await axios.post(
-      "/api/users",
-      { name, email, password },
-      config
-    );
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    // After user registers, login the user rightaway
-    dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    const { data } = await axios.post("/api/users", {
+      name,
+      email,
+      password,
+    });
+    dispatch({ type: USER_REGISTER_SUCCESS, payload: data.msg });
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -139,7 +159,24 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 };
 
-// We want to send a token
+export const activate = (activation_token) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_ACTIVATE_REQUEST });
+    const { data } = await axios.post("/api/users/activate", {
+      activation_token,
+    });
+    dispatch({ type: USER_ACTIVATE_SUCCESS, payload: data.msg });
+  } catch (error) {
+    dispatch({
+      type: USER_ACTIVATE_FAIL,
+      payload:
+        error.response && error.response.data.msg
+          ? error.response.data.msg
+          : error.msg,
+    });
+  }
+};
+
 export const getUserDetails = (id) => async (dispatch, getState) => {
   // We can get userInfo from getState which has token in it
   try {

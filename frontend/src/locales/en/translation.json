@@ -165,5 +165,8 @@
   "enter-fa-category": "Product's category in Farsi",
   "description-fa": "Description in Farsi",
   "enter-en-description": "Product's description in English",
-  "enter-fa-description": "Product's description in Farsi"
+  "enter-fa-description": "Product's description in Farsi",
+
+  "account-activated": "Your account has been activated!",
+  "log-in": "Log in"
 }

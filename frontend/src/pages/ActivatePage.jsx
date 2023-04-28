@@ -1,42 +1,34 @@
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
-import { useEffect, useState } from "react";
+import Loader from "../components/Loader";
+import { useEffect } from "react";
+import { activate } from "../actions/userActions";
 
 const ActivatePage = () => {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const { activation_token } = useParams();
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const userActivate = useSelector((state) => state.userActivate);
+  const { loading, error, success } = userActivate;
 
   useEffect(() => {
     if (activation_token) {
-      const activateUser = async () => {
-        try {
-          const res = await axios.post("/api/users/activate", {
-            activation_token,
-          });
-          setSuccess(res.data.msg);
-        } catch (error) {
-          setError(
-            error.response && error.response.data.msg
-              ? error.response.data.msg
-              : error.msg
-          );
-        }
-      };
-
-      activateUser();
+      dispatch(activate(activation_token));
     }
-  }, [activation_token]);
+  }, [activation_token, dispatch]);
 
   return (
     <FormContainer>
       {error && <Message variant="danger">{error}</Message>}
       {success && <Message variant="success">{success}</Message>}
-      <p>Your account has been activated!</p>
+      {loading && <Loader />}
+      <p>{t("account-activated")}</p>
       <p>
-        <Link to="/login">Login</Link>
+        <Link to="/login">{t("log-in")}</Link>
       </p>
     </FormContainer>
   );

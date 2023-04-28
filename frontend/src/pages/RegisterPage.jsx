@@ -1,14 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-// import { register } from "../actions/userActions";
-import axios from "axios";
+import { register } from "../actions/userActions";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -17,13 +16,14 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const userRegister = useSelector((state) => state.userRegister);
   // const { loading, userInfo, error } = userRegister;
+
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, success, error } = userRegister;
 
   // const navigate = useNavigate();
   const location = useLocation();
@@ -39,34 +39,13 @@ const RegisterPage = () => {
   // }, [navigate, userInfo, redirect]);
   // In the activation case, we don't want to go anywhere and stay in the registeration page until the user opens his email and activate account.
 
-  const register = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.post("/api/users", {
-        name,
-        email,
-        password,
-      });
-      setMessage(res.data.msg);
-      setLoading(false);
-    } catch (error) {
-      setError(
-        error.response && error.response.data.msg
-          ? error.response.data.msg
-          : error.msg
-      );
-      setLoading(false);
-    }
-  };
-
   const submitHandler = (e) => {
     e.preventDefault();
     // Check the password
     if (password !== confirmPassword) {
       setMessage(t("passwords-do-not-match"));
     } else {
-      // dispatch(register(name, email, password));
-      register();
+      dispatch(register(name, email, password));
     }
   };
 
@@ -78,6 +57,7 @@ const RegisterPage = () => {
     <FormContainer>
       <h1>{t("sign-up")}</h1>
       {message && <Message variant="danger">{message}</Message>}
+      {success && <Message variant="danger">{success}</Message>}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
 

@@ -9,6 +9,9 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_ACTIVATE_REQUEST,
+  USER_ACTIVATE_SUCCESS,
+  USER_ACTIVATE_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
@@ -59,14 +62,41 @@ export const userGoogleLoginReducer = (state = {}, action) => {
   }
 };
 
+// This is when we register the user without the user's account being activated and we send the id, name, email, isadmin, token
+// export const userRegisterReducer = (state = {}, action) => {
+//   switch (action.type) {
+//     case USER_REGISTER_REQUEST:
+//       return { loading: true };
+//     case USER_REGISTER_SUCCESS:
+//       // userInfo pertains to the payload (basically whatever we are sending from the server. In register case, we used to send name, email, password, id, token, isAdmin)
+//       return { loading: false, userInfo: action.payload };
+//     case USER_REGISTER_FAIL:
+//       return { loading: false, error: action.payload };
+//     default:
+//       return state;
+//   }
+// };
+
 export const userRegisterReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_REGISTER_REQUEST:
       return { loading: true };
     case USER_REGISTER_SUCCESS:
-      // userInfo pertains to the payload (basically whatever we are sending from the server. In register case, we used to send name, email, password, id, token, isAdmin)
-      return { loading: false, userInfo: action.payload };
+      return { loading: false, success: action.payload };
     case USER_REGISTER_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const userActivateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_ACTIVATE_REQUEST:
+      return { loading: true };
+    case USER_ACTIVATE_SUCCESS:
+      return { loading: false, success: action.payload };
+    case USER_ACTIVATE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

@@ -164,5 +164,8 @@
   "enter-fa-category": "کتگوری محصول به فارسی",
   "description-fa": "توضیحات به فارسی",
   "enter-en-description": "توضیحات محصول به انگلیسی",
-  "enter-fa-description": "توضیحات محصول به فارسی"
+  "enter-fa-description": "توضیحات محصول به فارسی",
+
+  "account-activated": "حساب تان فعال شد",
+  "log-in": "وارد شوید"
 }
