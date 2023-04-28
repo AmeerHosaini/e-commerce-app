@@ -25,5 +25,7 @@
   "email-required": "Please provide your email",
   "password-required": "Please provide your password",
   "password-small": "Password cannot be less than 6 characters",
-  "valid-email": "Please provide a valid email"
+  "valid-email": "Please provide a valid email",
+  "check-email": "Welcome! Please Check Your Email",
+  "account-activated": "Your account has been activated, you can now sign in"
 }

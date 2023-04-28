@@ -106,7 +106,7 @@ const registerUser = asyncHandler(async (req, res) => {
   sendEmailRegister(email, url, "Verify Your Email");
 
   // registeration success
-  res.status(200).json({ msg: "Welcome! Please Check Your Email" });
+  res.status(200).json({ msg: req.t("check-email") });
 });
 
 // @desc Register a new user
@@ -136,9 +136,7 @@ const activate = asyncHandler(async (req, res) => {
   await newUser.save();
 
   // activation success
-  res
-    .status(200)
-    .json({ msg: "Your account has been activated, you can now sign in" });
+  res.status(200).json({ msg: req.t("account-activated") });
 });
 
 // @desc Auth user and get token
