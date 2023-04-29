@@ -303,19 +303,12 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   // if user exists in db / sign in
   if (user) {
-    // create a refresh token
-    const refreshToken = user.createRefreshToken();
     // create a token
     const token = user.createJwt();
 
-    // store cookie
-    res.cookie("_apprftoken", refreshToken, {
-      httpOnly: true,
-      path: "/api/users/login",
-      maxAge: 24 * 60 * 60 * 1000, // 24hrs
-    });
     // success, include user info in response
     res.status(StatusCodes.OK).json({
+      // id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
@@ -331,20 +324,13 @@ const googleLogin = asyncHandler(async (req, res) => {
     });
     await newUser.save();
     // sign in the user
-    // create a refresh token
-    const refreshToken = newUser.createRefreshToken();
 
     // create a token
     const token = newUser.createJwt();
 
-    // store cookie
-    res.cookie("_apprftoken", refreshToken, {
-      httpOnly: true,
-      path: "/api/users/login",
-      maxAge: 24 * 60 * 60 * 1000, // 24hrs
-    });
     // success, include user info in response
     res.status(StatusCodes.CREATED).json({
+      // id: user._id,
       name: newUser.name,
       email: newUser.email,
       isAdmin: newUser.isAdmin,

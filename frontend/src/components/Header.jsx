@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
@@ -12,8 +11,6 @@ import axios from "axios";
 const Header = ({ theme, toggleTheme }) => {
   // this gets userLogin part of our state
   // then, we destructure our states from userReducer
-
-  const [language, setLanguage] = useState("en");
 
   const { i18n, t } = useTranslation();
 

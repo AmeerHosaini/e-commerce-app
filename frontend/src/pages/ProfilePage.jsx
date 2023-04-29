@@ -27,6 +27,9 @@ const ProfilePage = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { userInfo: userGoogleInfo } = userGoogleLogin;
+
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
 
@@ -34,7 +37,7 @@ const ProfilePage = () => {
   const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
   useEffect(() => {
-    if (!userInfo) {
+    if (!userInfo || !userGoogleInfo) {
       navigate("/login");
     } else {
       // if we don't have user
@@ -46,7 +49,7 @@ const ProfilePage = () => {
         setEmail(user.email);
       }
     }
-  }, [dispatch, navigate, userInfo, user]);
+  }, [dispatch, navigate, userInfo, user, userGoogleInfo]);
 
   const submitHandler = (e) => {
     e.preventDefault();

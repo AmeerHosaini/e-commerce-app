@@ -205,6 +205,51 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     });
   }
 };
+// export const getUserDetails = (id) => async (dispatch, getState) => {
+//   // We can get userInfo from getState which has token in it
+//   try {
+//     dispatch({ type: USER_DETAILS_REQUEST });
+
+//     const {
+//       userLogin: { userInfo },
+//     } = getState();
+
+//     const config = {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${userInfo.token}`,
+//       },
+//     };
+
+//     // Fetch the user's Google information
+//     const googleInfoConfig = {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${userInfo.token}`,
+//         "google-info": true,
+//       },
+//     };
+//     const { data: googleInfo } = await axios.get(
+//       `/api/users/${id}`,
+//       googleInfoConfig
+//     );
+
+//     // Store the user's Google information in the Redux store
+//     dispatch({ type: USER_GOOGLE_LOGIN_SUCCESS, payload: googleInfo });
+
+//     // Fetch the user's details
+//     const { data } = await axios.get(`/api/users/${id}`, config);
+//     dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
+//   } catch (error) {
+//     dispatch({
+//       type: USER_DETAILS_FAIL,
+//       payload:
+//         error.response && error.response.data.msg
+//           ? error.response.data.msg
+//           : error.msg,
+//     });
+//   }
+// };
 
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
