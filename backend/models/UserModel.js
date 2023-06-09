@@ -59,14 +59,14 @@ UserSchema.pre("save", async function (next) {
 
 UserSchema.methods.createJwt = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "20min",
+    expiresIn: "7d",
   });
 };
 
 // create a refresh token
 UserSchema.methods.createRefreshToken = function () {
   return jwt.sign({ id: this._id }, process.env.G_REFRESH_TOKEN, {
-    expiresIn: "24h",
+    expiresIn: "7d",
   });
 };
 
