@@ -30,8 +30,13 @@ const getProducts = asyncHandler(async (req, res) => {
   );
 
   // search
-  if (req.query.name) {
-    reqQuery.name = { $regex: req.query.name, $options: "i" };
+  if (req.query.name || req.query.name_fa) {
+    reqQuery.$or = [
+      { name: { $regex: req.query.name, $options: "i" } },
+      { name_fa: { $regex: req.query.name, $options: "i" } },
+    ];
+    delete reqQuery.name;
+    delete reqQuery.name_fa;
   }
 
   // Filter
