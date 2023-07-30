@@ -46,7 +46,14 @@ const PaymentPage = () => {
             id="PayPal"
             name="paymentMethod"
             value="PayPal"
-            checked
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          ></Form.Check>
+          <Form.Check
+            type="radio"
+            label={t("cash-on-delivery")}
+            id="cashOnDelivery"
+            name="paymentMethod"
+            value="cashOnDelivery"
             onChange={(e) => setPaymentMethod(e.target.value)}
           ></Form.Check>
         </Col>

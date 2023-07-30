@@ -218,86 +218,89 @@ const Home = () => {
     <>
       <Meta />
       {!keyword ? (
-        <ProductCarousel />
+        <>
+          <ProductCarousel />
+          {/* Filtering */}
+          <StyledPaper className="mui-slider-bg">
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <Typography gutterBottom className="mui-font">
+                  {t("filters")}
+                </Typography>
+                <Filters>
+                  <Slider
+                    min={0}
+                    max={sliderMax}
+                    value={priceRange}
+                    onChange={(e, newValue) => setPriceRange(newValue)}
+                    onChangeCommitted={onSliderCommitHandler}
+                    disabled={loading}
+                    valueLabelDisplay="auto"
+                  />
+                  <PriceInputs>
+                    <TextField
+                      size="small"
+                      id="lower"
+                      label={t("min-price")}
+                      variant="outlined"
+                      type="number"
+                      disabled={loading}
+                      value={priceRange[0]}
+                      onChange={(e) => handlePriceInputChange(e, "lower")}
+                      onBlur={onTextFieldCommitHandler}
+                    />
+                    <TextField
+                      size="small"
+                      id="upper"
+                      label={t("max-price")}
+                      variant="outlined"
+                      type="number"
+                      disabled={loading}
+                      value={priceRange[1]}
+                      onChange={(e) => handlePriceInputChange(e, "upper")}
+                      onBlur={onTextFieldCommitHandler}
+                    />
+                  </PriceInputs>
+                </Filters>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography gutterBottom className="mui-font">
+                  {t("sort_by")}
+                </Typography>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    aria-label="price-order"
+                    name="price-order"
+                    value={priceOrder}
+                    onChange={handleSortChange}
+                  >
+                    <FormControlLabel
+                      disabled={loading}
+                      control={<Radio />}
+                      value="descending"
+                      label={t("price-highest-to-lowest")}
+                    />
+                    <FormControlLabel
+                      disabled={loading}
+                      control={<Radio />}
+                      value="ascending"
+                      label={t("price-lowest-to-highest")}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Button className="btn btn-primary" onClick={clearAllFilters}>
+              {t("clear-all")}
+            </Button>
+          </StyledPaper>
+        </>
       ) : (
         <Link to="/" className="btn btn-dark">
           {t("go-back")}
         </Link>
       )}
-      {/* Filtering */}
-      <StyledPaper className="mui-slider-bg">
-        <Grid container>
-          <Grid item xs={12} sm={6}>
-            <Typography gutterBottom className="mui-font">
-              {t("filters")}
-            </Typography>
-            <Filters>
-              <Slider
-                min={0}
-                max={sliderMax}
-                value={priceRange}
-                onChange={(e, newValue) => setPriceRange(newValue)}
-                onChangeCommitted={onSliderCommitHandler}
-                disabled={loading}
-                valueLabelDisplay="auto"
-              />
-              <PriceInputs>
-                <TextField
-                  size="small"
-                  id="lower"
-                  label={t("min-price")}
-                  variant="outlined"
-                  type="number"
-                  disabled={loading}
-                  value={priceRange[0]}
-                  onChange={(e) => handlePriceInputChange(e, "lower")}
-                  onBlur={onTextFieldCommitHandler}
-                />
-                <TextField
-                  size="small"
-                  id="upper"
-                  label={t("max-price")}
-                  variant="outlined"
-                  type="number"
-                  disabled={loading}
-                  value={priceRange[1]}
-                  onChange={(e) => handlePriceInputChange(e, "upper")}
-                  onBlur={onTextFieldCommitHandler}
-                />
-              </PriceInputs>
-            </Filters>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography gutterBottom className="mui-font">
-              {t("sort_by")}
-            </Typography>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="price-order"
-                name="price-order"
-                value={priceOrder}
-                onChange={handleSortChange}
-              >
-                <FormControlLabel
-                  disabled={loading}
-                  control={<Radio />}
-                  value="descending"
-                  label={t("price-highest-to-lowest")}
-                />
-                <FormControlLabel
-                  disabled={loading}
-                  control={<Radio />}
-                  value="ascending"
-                  label={t("price-lowest-to-highest")}
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Button className="btn btn-primary" onClick={clearAllFilters}>
-          {t("clear-all")}
-        </Button>
-      </StyledPaper>
+
       <h1 className={`mt-3`}>{t("latest_products")}</h1>
       {loading ? (
         <Loader />
@@ -305,18 +308,24 @@ const Home = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Row>
-            {products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
-              </Col>
-            ))}
-          </Row>
-          <Paginate
-            pages={pages}
-            page={page}
-            keyword={keyword ? keyword : ""}
-          />
+          {(!keyword && products?.length === 0) || products?.length === 0 ? (
+            <Message variant="danger">No item found</Message>
+          ) : (
+            <>
+              <Row>
+                {products.map((product) => (
+                  <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                    <Product product={product} />
+                  </Col>
+                ))}
+              </Row>
+              <Paginate
+                pages={pages}
+                page={page}
+                keyword={keyword ? keyword : ""}
+              />
+            </>
+          )}
         </>
       )}
     </>

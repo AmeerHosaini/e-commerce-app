@@ -60,7 +60,10 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route patch /api/orders/:id/pay
 // @access Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  const order = await OrderModel.findOne({ _id: req.params.id });
+  const order = await OrderModel.findOne({ _id: req.params.id }).populate(
+    "orderItems.product"
+  );
+
   if (!order) {
     throw new NotFound("no-order", req, { id: req.params.id });
   }
@@ -74,9 +77,23 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     email_address: req.body.payer.email_address,
   };
 
-  // We should save the fields to the database since we are updating them
-  const updatedOrder = await order.save();
-  res.status(StatusCodes.OK).json(updatedOrder);
+  // Decrement countInStock for each product in the order
+  order.orderItems.forEach(async (orderItem) => {
+    const product = orderItem.product;
+    const quantityOrdered = orderItem.quantity;
+
+    // Check if the product has enough stock before decrementing
+    if (product.countInStock >= quantityOrdered) {
+      product.countInStock -= quantityOrdered;
+      await product.save();
+    } else {
+      console.log(`Not enough stock for product: ${product.name}`);
+    }
+  });
+
+  // Save the updated order and product(s) to the database
+  await Promise.all([order.save()]);
+  res.status(StatusCodes.OK).json(order);
 });
 
 // @desc Update order to delivered
@@ -92,6 +109,37 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
 
   const updatedOrder = await order.save();
   res.status(StatusCodes.OK).json(updatedOrder);
+});
+
+// @desc Update order to paid for cash on delivery payment method
+// @route patch /api/orders/:id/paid-on-delivery
+// @access Private/Admin
+const updateOrderToPaidDelivery = asyncHandler(async (req, res) => {
+  const order = await OrderModel.findOne({ _id: req.params.id }).populate(
+    "orderItems.product"
+  );
+  if (!order) {
+    throw new NotFound("no-order", req, { id: req.params.id });
+  }
+  order.isPaid = true;
+  order.paidAt = Date.now();
+  // Decrement countInStock for each product in the order
+  order.orderItems.forEach(async (orderItem) => {
+    const product = orderItem.product;
+    const quantityOrdered = orderItem.quantity;
+
+    // Check if the product has enough stock before decrementing
+    if (product.countInStock >= quantityOrdered) {
+      product.countInStock -= quantityOrdered;
+      await product.save();
+    } else {
+      console.log(`Not enough stock for product: ${product.name}`);
+    }
+  });
+
+  // Save the updated order and product(s) to the database
+  await Promise.all([order.save()]);
+  res.status(StatusCodes.OK).json(order);
 });
 
 // @desc Get logged in user orders
@@ -118,4 +166,5 @@ module.exports = {
   updateOrderToDelivered,
   getLoggedInUserOrders,
   getOrders,
+  updateOrderToPaidDelivery,
 };

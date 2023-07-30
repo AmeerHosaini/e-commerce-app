@@ -29,7 +29,7 @@ i18next
     detection: {
       order: ["header"],
     },
-    fallbackLng: "fa",
+    fallbackLng: "en",
     backend: {
       loadPath: __dirname + "/locales/{{lng}}/{{ns}}.json",
     },

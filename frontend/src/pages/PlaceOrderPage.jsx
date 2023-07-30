@@ -38,6 +38,8 @@ const PlaceOrderPage = () => {
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
 
+  console.log(cart);
+
   useEffect(() => {
     if (success) {
       navigate(`/order/${order._id}`);

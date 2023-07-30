@@ -17,6 +17,10 @@ import {
   ORDER_DELIVER_FAIL,
   ORDER_DELIVER_REQUEST,
   ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_PAY_REQUEST,
+  ORDER_DELIVER_PAY_SUCCESS,
+  ORDER_DELIVER_PAY_FAIL,
+  ORDER_DELIVER_PAY_RESET,
 } from "../constants/orderConstant";
 import axios from "axios";
 
@@ -138,6 +142,36 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.msg
+          ? error.response.data.msg
+          : error.msg,
+    });
+  }
+};
+
+export const paidCashOnDelivery = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_DELIVER_PAY_REQUEST });
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.patch(
+      `/api/orders/${order._id}/paid-on-delivery`,
+      {},
+      config
+    );
+    dispatch({ type: ORDER_DELIVER_PAY_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_PAY_FAIL,
       payload:
         error.response && error.response.data.msg
           ? error.response.data.msg

@@ -46,7 +46,7 @@ const Header = ({ theme, toggleTheme }) => {
     axios.defaults.headers.common["Accept-Language"] = eventKey;
     // setLanguage(eventKey);
     dispatch(changeLanguage(eventKey));
-    // document.documentElement.dir = eventKey === "fa" ? "rtl" : "ltr";
+    document.documentElement.dir = eventKey === "fa" ? "rtl" : "ltr";
   }
 
   return (

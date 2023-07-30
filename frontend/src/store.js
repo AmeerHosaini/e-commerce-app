@@ -29,6 +29,7 @@ import {
   orderDeliverReducer,
   orderListMyReducer,
   orderListReducer,
+  orderPayCashOnDeliveryReducer,
 } from "./reducers/orderReducers";
 
 import { changeLangReducer } from "./reducers/langReducers";
@@ -60,6 +61,7 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
+  orderPayCashOnDelivery: orderPayCashOnDeliveryReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
   changeLang: changeLangReducer,

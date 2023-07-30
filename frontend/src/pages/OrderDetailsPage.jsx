@@ -11,10 +11,12 @@ import {
   getOrderDetails,
   payOrder,
   deliverOrder,
+  paidCashOnDelivery,
 } from "../actions/orderActions";
 import {
   ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_DELIVER_PAY_RESET,
 } from "../constants/orderConstant";
 
 const OrderDetailsPage = () => {
@@ -31,8 +33,16 @@ const OrderDetailsPage = () => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
+  console.log(order);
+
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderPayCashOnDelivery = useSelector(
+    (state) => state.orderPayCashOnDelivery
+  );
+  const { loading: loadingCashOnDelivery, success: successCashOnDelivery } =
+    orderPayCashOnDelivery;
 
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
@@ -66,22 +76,32 @@ const OrderDetailsPage = () => {
       document.body.appendChild(script);
     };
 
-    if (!order || successPay || successDeliver) {
+    if (!order || successPay || successDeliver || successCashOnDelivery) {
       // We dont want to run into a non-ending loop from this useEffect - Once you pay, it will keep refreshing if you dont dispatch this
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
+      dispatch({ type: ORDER_DELIVER_PAY_RESET });
       // This will load the order again but paid this time
       // Or load the order even when it's not paid
       // After payment is done successfully, orderPage will refresh and Paid message turns green
       dispatch(getOrderDetails(id));
-    } else if (!order.isPaid) {
+    } else if (!order.isPaid && order?.paymentMethod === "PayPal") {
       if (!window.paypal) {
         addPaypalScript();
       } else {
         setSdkReady(true);
       }
     }
-  }, [dispatch, id, successPay, order, successDeliver, userInfo, navigate]);
+  }, [
+    dispatch,
+    id,
+    successPay,
+    order,
+    successDeliver,
+    userInfo,
+    navigate,
+    successCashOnDelivery,
+  ]);
 
   // Success Payment Handler
   const successPaymentHandler = (paymentResult) => {
@@ -92,6 +112,10 @@ const OrderDetailsPage = () => {
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
+  };
+
+  const updateToPaidOnDelivery = () => {
+    dispatch(paidCashOnDelivery(order));
   };
 
   // if it's loading, show loader. else if there is an error
@@ -208,7 +232,7 @@ const OrderDetailsPage = () => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
+              {!order.isPaid && order?.paymentMethod === "PayPal" && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
                   {!sdkReady ? (
@@ -233,6 +257,21 @@ const OrderDetailsPage = () => {
                       onClick={deliverHandler}
                     >
                       {t("mark-delivered")}
+                    </Button>
+                  </ListGroup.Item>
+                )}
+              {loadingCashOnDelivery && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                !order.isPaid &&
+                order.paymentMethod === "cashOnDelivery" && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={updateToPaidOnDelivery}
+                    >
+                      Update to Paid
                     </Button>
                   </ListGroup.Item>
                 )}
