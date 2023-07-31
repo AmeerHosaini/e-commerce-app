@@ -27,5 +27,6 @@
   "password-small": "Password cannot be less than 6 characters",
   "valid-email": "Please provide a valid email",
   "check-email": "Welcome! Please Check Your Email",
-  "account-activated": "Your account has been activated, you can now sign in"
+  "account-activated": "Your account has been activated, you can now sign in",
+  "name-image-exist": "Product with the same name or image already exists"
 }

@@ -133,34 +133,6 @@ const deleteProduct = asyncHandler(async (req, res) => {
 // @route POST /api/products/
 // @access private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-  // const product = new ProductModel({
-  //   name: "Sample name",
-  //   price: 0,
-  //   user: req.user._id,
-  //   image: "/images/sample.jpg",
-  //   brand: "Sample brand",
-  //   category: "Sample category",
-  //   countInStock: 0,
-  //   numReviews: 0,
-  //   description: "Sample description",
-  // });
-
-  // const createdProduct = await product.save();
-  // res.status(StatusCodes.CREATED).json(createdProduct);
-  // const {
-  //   name,
-  //   name_fa,
-  //   price,
-  //   brand,
-  //   brand_fa,
-  //   category,
-  //   category_fa,
-  //   countInStock,
-  //   numReviews,
-  //   description,
-  //   description_fa,
-  // } = req.body;
-
   const product = new ProductModel({
     name: "Name",
     name_fa: "نام",
@@ -180,7 +152,6 @@ const createProduct = asyncHandler(async (req, res) => {
   const createdProduct = await product.save();
   res.status(StatusCodes.CREATED).json(createdProduct);
 });
-
 // @desc Update a product
 // @route PATCH /api/products/:id
 // @access private/Admin
@@ -198,11 +169,22 @@ const updateProduct = asyncHandler(async (req, res) => {
     category_fa,
     countInStock,
   } = req.body;
+
+  const existingProduct = await ProductModel.findOne({
+    $or: [{ name }, { name_fa }, { image }],
+    _id: { $ne: req.params.id }, // Exclude the current product from the search
+  });
+
+  if (existingProduct) {
+    // If a product with the same name or image exists (excluding the current product), throw an error
+    throw new BadRequest("name-image-exist", req);
+  }
+
   const product = await ProductModel.findById(req.params.id);
   if (!product) {
     throw new NotFound("no-product", req, { id: req.params.id });
   }
-
+  // Update the product with the new values
   product.name = name;
   product.name_fa = name_fa;
   product.price = price;

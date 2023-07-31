@@ -169,5 +169,6 @@
 
   "account-activated": "Your account has been activated!",
   "log-in": "Log in",
-  "cash-on-delivery": "Cash on Delivery"
+  "cash-on-delivery": "Cash on Delivery",
+  "item-not-found": "Item not found"
 }

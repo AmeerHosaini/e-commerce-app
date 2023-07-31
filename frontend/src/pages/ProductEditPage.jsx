@@ -86,6 +86,25 @@ const ProductEditPage = () => {
     }
   };
 
+  const handlePriceChange = (e) => {
+    const inputPrice = Number(e.target.value);
+    // if not a number or negative
+    if (isNaN(inputPrice) || inputPrice < 0) {
+      setPrice(0);
+    } else {
+      setPrice(inputPrice);
+    }
+  };
+
+  const handleCountInStockChange = (e) => {
+    const inputCountInStock = Number(e.target.value);
+    if (isNaN(inputCountInStock) || inputCountInStock < 0) {
+      setCountInStock(0);
+    } else {
+      setPrice(inputCountInStock);
+    }
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(
@@ -145,7 +164,7 @@ const ProductEditPage = () => {
                 type="number"
                 placeholder={t("enter-price")}
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handlePriceChange}
               ></Form.Control>
             </Form.Group>
 
@@ -187,7 +206,7 @@ const ProductEditPage = () => {
                 type="number"
                 placeholder={t("enter-count-in-stock")}
                 value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
+                onChange={handleCountInStockChange}
               ></Form.Control>
             </Form.Group>
 

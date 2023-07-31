@@ -309,7 +309,7 @@ const Home = () => {
       ) : (
         <>
           {(!keyword && products?.length === 0) || products?.length === 0 ? (
-            <Message variant="danger">No item found</Message>
+            <Message variant="danger">{t("item-not-found")}</Message>
           ) : (
             <>
               <Row>
