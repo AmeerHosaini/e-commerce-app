@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { MdVisibilityOff, MdVisibility } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
-import FormContainer from "../components/FormContainer";
 import Loader from "../components/Loader";
 import { login, googleLogin } from "../actions/userActions";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -64,94 +63,115 @@ const LoginPage = () => {
   // };
 
   return (
-    <FormContainer>
-      <h1>{t("sign-in")}</h1>
-      {error && <Message variant="danger">{error}</Message>}
-      {loading && <Loader />}
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email">
-          <Form.Label>{t("email-address")}</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder={t("enter-email")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <Card
+        className="shadow"
+        style={{
+          width: "500px",
+        }}
+      >
+        <Card.Body className="p-4">
+          <h1 className="text-center mb-4">{t("sign-in")}</h1>
+          {error && <Message variant="danger">{error}</Message>}
+          {loading && <Loader />}
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId="email">
+              <Form.Label className="col-form-label mt-4">
+                {t("email-address")}
+              </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder={t("enter-email")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
 
-        <Form.Group controlId="password">
-          <Form.Label className="mt-2">{t("password")}</Form.Label>
-          <div style={{ position: "relative" }}>
-            <Form.Control
-              type={isVisible ? "text" : "password"}
-              placeholder={t("enter-password")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={{ paddingRight: "2.5rem" }} // Add padding to make space for the icon
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "0.75rem",
-                transform: "translateY(-50%)",
-                cursor: "pointer",
-              }}
-              onClick={togglePassword}
-            >
-              {isVisible ? <MdVisibility /> : <MdVisibilityOff />}
+            <Form.Group controlId="password">
+              <Form.Label className="mt-2">{t("password")}</Form.Label>
+              <div style={{ position: "relative" }}>
+                <Form.Control
+                  type={isVisible ? "text" : "password"}
+                  placeholder={t("enter-password")}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{ paddingRight: "2.5rem" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "0.75rem",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer",
+                  }}
+                  onClick={togglePassword}
+                >
+                  {isVisible ? (
+                    <MdVisibility className="text-info" />
+                  ) : (
+                    <MdVisibilityOff className="text-info" />
+                  )}
+                </div>
+              </div>
+            </Form.Group>
+
+            <div className="d-flex justify-content-between">
+              <Button
+                className="mt-3"
+                type="submit"
+                variant="info"
+                style={{ width: "48%" }}
+              >
+                {t("sign-in")}
+              </Button>
+              <div
+                className="btn btn-danger text-white mt-3 btn-google-login"
+                style={{ width: "48%" }}
+                onClick={() => g_login()}
+              >
+                {t("gmail")} <FcGoogle />
+              </div>
             </div>
-          </div>
-        </Form.Group>
+          </Form>
 
-        <div className="d-flex justify-content-between">
-          <Button
-            className="mt-3"
-            type="submit"
-            variant="primary"
-            style={{ width: "48%" }}
-          >
-            {t("sign-in")}
-          </Button>
-          <div
-            className="btn btn-outline-primary mt-3 btn-google-login"
-            style={{ width: "48%" }}
-            onClick={() => g_login()}
-          >
-            {/* <GoogleLogin
-              buttonText="Sign in with Google"
-              onSuccess={googleSuccess}
-              onFailure={googleError}
-            /> 
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
-            }}
-              onError={() => {
-              console.log("Login Failed");
-            }}
-            />
-            */}
-            {t("gmail")} <FcGoogle />
-          </div>
-        </div>
-      </Form>
-
-      <Row className="py-3">
-        <Col>
-          {t("new-customer")}{" "}
-          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-            {t("register")}
-          </Link>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Link to={"/forgotpassword"}>{t("forgot-password")}</Link>
-        </Col>
-      </Row>
-    </FormContainer>
+          <Row className="py-3">
+            <Col>
+              {t("new-customer")}{" "}
+              <Link
+                className="text-info"
+                to={redirect ? `/register?redirect=${redirect}` : "/register"}
+              >
+                {t("register")}
+              </Link>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Link className="text-info" to={"/forgotpassword"}>
+                {t("forgot-password")}
+              </Link>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 
 export default LoginPage;
+
+/* <GoogleLogin
+buttonText="Sign in with Google"
+onSuccess={googleSuccess}
+onFailure={googleError}
+/> 
+GoogleLogin
+onSuccess={(credentialResponse) => {
+console.log(credentialResponse);
+}}
+onError={() => {
+console.log("Login Failed");
+}}
+/>
+*/

@@ -59,8 +59,7 @@ const Header = ({ theme, toggleTheme }) => {
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <SearchBox />
-            <Nav className="ml-auto">
+            <Nav className="mx-auto">
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart className={`mb-1 mr-2 ${textStyle}`} />
@@ -128,6 +127,7 @@ const Header = ({ theme, toggleTheme }) => {
                 )}
               </Nav.Link>
             </Nav>
+            <SearchBox />
           </Navbar.Collapse>
         </Container>
       </Navbar>

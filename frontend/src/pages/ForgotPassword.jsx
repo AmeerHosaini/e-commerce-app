@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import FormContainer from "../components/FormContainer";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Card } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import Message from "../components/Message";
@@ -48,27 +47,31 @@ const ForgotPassword = () => {
   };
 
   return (
-    <FormContainer>
-      <h1>{t("forgot-password")}</h1>
-      <p>{t("forgot-password-msg")}</p>
-      {/* Add error and success */}
-      {error && <Message variant="danger">{error}</Message>}
-      {success && <Message variant="success">{success}</Message>}
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId="email">
-          <Form.Label>{t("email-address")}</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder={t("enter-email")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
-        </Form.Group>
-        <Button className="mt-3" type="submit" variant="primary">
-          {t("send-email")}
-        </Button>
-      </Form>
-    </FormContainer>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+      <Card className="shadow" style={{ width: "500px" }}>
+        <Card.Body>
+          <h1 className="text-center">{t("forgot-password")}</h1>
+          <p className="text-center">{t("forgot-password-msg")}</p>
+          {/* Add error and success */}
+          {error && <Message variant="danger">{error}</Message>}
+          {success && <Message variant="success">{success}</Message>}
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId="email">
+              <Form.Label>{t("email-address")}</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder={t("enter-email")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Button className="mt-3" type="submit" variant="info" block>
+              {t("send-email")}
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </div>
   );
 };
 

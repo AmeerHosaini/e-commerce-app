@@ -87,6 +87,10 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 
+const languageFromStorage = localStorage.getItem("language")
+  ? JSON.parse(localStorage.getItem("language"))
+  : "en";
+
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
@@ -95,6 +99,7 @@ const initialState = {
   },
   userLogin: { userInfo: userInfoFromStorage },
   userGoogleLogin: { userInfo: userInfoFromStorage },
+  // lang: languageFromStorage,
 };
 
 const middleware = [thunk];
