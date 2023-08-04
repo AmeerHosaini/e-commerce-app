@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
@@ -17,6 +17,10 @@ const UserListPage = () => {
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
 
+  const numOfAdmins = users?.reduce(
+    (count, user) => (user.isAdmin ? count + 1 : count),
+    0
+  );
   /* Security Check - When we log out as admin, we will see the users list and if we reload, we get token null
     2. When we login as a user and manually hit /admin/userlist route, we will get a not an admin custom error
     we don't want even want the user to access that page
@@ -45,7 +49,25 @@ const UserListPage = () => {
 
   return (
     <>
-      <h1>Users</h1>
+      <h1>{t("users")}</h1>
+      <Row className="mb-4">
+        <Col md={6}>
+          <Card>
+            <Card.Body>
+              <Card.Title>{t("users")}</Card.Title>
+              <Card.Text>{users?.length}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card>
+            <Card.Body>
+              <Card.Title>{t("admins")}</Card.Title>
+              <Card.Text>{numOfAdmins}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
       {loading ? (
         <Loader />
       ) : error ? (

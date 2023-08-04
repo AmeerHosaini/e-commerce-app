@@ -10,6 +10,7 @@
   "profile": "مشخصات",
   "log-out": "خارج شدن",
   "admin": "ادمین",
+  "admins": "ادمین ها",
   "users": "کاربران",
   "products": "محصولات",
   "orders": "سفارشات",
@@ -169,5 +170,12 @@
   "account-activated": "حساب تان فعال شد",
   "log-in": "وارد شوید",
   "cash-on-delivery": "پرداخت در وقت تحویل",
-  "item-not-found": "نتیجه پیدا نشد"
+  "item-not-found": "نتیجه پیدا نشد",
+  "orders-paid": "سفارشات پرداخت شده",
+  "orders-not-paid": "سفارشات پرداخت نشده",
+  "orders-delivered": "سفارشات تحویل داده شده",
+  "orders-not-delivered": "سفارشات تحویل داده نشده",
+  "paid-total": "مجموعه پرداخت شده",
+  "not-paid-total": "مجموعه پرداخت نشده",
+  "total-value": "مجموعه محصولات"
 }

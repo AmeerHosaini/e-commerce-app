@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Row, Col } from "react-bootstrap";
+import { Table, Button, Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message";
@@ -23,6 +23,10 @@ const ProductListPage = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages, page } = productList;
+
+  const totalValue = products
+    ?.filter((product) => product.price)
+    .reduce((total, product) => total + product.price, 0);
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -90,6 +94,24 @@ const ProductListPage = () => {
         <Col>
           <h1>{t("products")}</h1>
         </Col>
+        <Row className="mb-4">
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title>{t("products")}</Card.Title>
+                <Card.Text>{products?.length}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={6}>
+            <Card>
+              <Card.Body>
+                <Card.Title>{t("total-value")}</Card.Title>
+                <Card.Text>${totalValue}</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
         <Col className="text-right">
           <Button className="my-3" onClick={createProductHandler}>
             <i className="fas fa-plus"></i> {t("create-product")}

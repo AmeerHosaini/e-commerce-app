@@ -204,6 +204,8 @@ footer {
 
 div.card {
   background-color: var(--clr-dark);
+  color: var(--clr-font);
+  border-color: var(--clr-font);
 }
 
 label.col-form-label, label.form-label, div.col, div.btn-google-login{

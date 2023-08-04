@@ -15,7 +15,7 @@ const Product = ({ product }) => {
   const { t } = useTranslation();
 
   return (
-    <Card className="my-3 p-2 rounded home-product">
+    <Card className="my-3 p-2 rounded home-product shadow">
       <Link to={`/product/${_id}`}>
         <Card.Img src={image} variant="top" />
       </Link>

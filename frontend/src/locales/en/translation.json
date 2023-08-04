@@ -10,6 +10,7 @@
   "profile": "Profile",
   "log-out": "Log out",
   "admin": "Admin",
+  "admins": "Admins",
   "users": "Users",
   "products": "Products",
   "orders": "Orders",
@@ -170,5 +171,12 @@
   "account-activated": "Your account has been activated!",
   "log-in": "Log in",
   "cash-on-delivery": "Cash on Delivery",
-  "item-not-found": "Item not found"
+  "item-not-found": "Item not found",
+  "orders-paid": "Orders Paid",
+  "orders-not-paid": "Orders Not Paid",
+  "orders-delivered": "Orders Delivered",
+  "orders-not-delivered": "Orders Not Delivered",
+  "paid-total": "Paid Total",
+  "not-paid-total": "Not Paid Total",
+  "total-value": "Products Value"
 }
