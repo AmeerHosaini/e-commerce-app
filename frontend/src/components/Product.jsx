@@ -7,8 +7,6 @@ import Rating from "../components/Rating";
 const Product = ({ product }) => {
   const { _id, image, name, rating, numReviews, price, name_fa } = product;
 
-  console.log(name_fa);
-
   const changeLang = useSelector((state) => state.changeLang);
   const { lang } = changeLang;
 

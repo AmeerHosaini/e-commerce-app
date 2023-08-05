@@ -37,6 +37,15 @@ const ProfilePage = () => {
   const orderListMy = useSelector((state) => state.orderListMy);
   const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
+  // // Loop through each order
+  // const orderName = orders.forEach((order) => {
+  //   // Loop through the 'orderItems' array of each order
+  //   order.orderItems.forEach((item) => {
+  //     // Access the 'name' property of each item
+  //     const itemName = item.name;
+  //   });
+  // });
+
   useEffect(() => {
     if (!userInfo || !userGoogleInfo) {
       navigate("/login");
@@ -64,6 +73,7 @@ const ProfilePage = () => {
   // Define columns for the data grid
   const columns = [
     { field: "id", headerName: t("id"), width: 200 },
+    { field: "orderItems", headerName: t("name"), width: 200 },
     {
       field: "date",
       headerName: t("date"),
@@ -113,6 +123,7 @@ const ProfilePage = () => {
   // Create rows data for the data grid
   const rows = orders?.map((order) => ({
     id: order._id,
+    orderItems: order.orderItems.map((item) => item.name).join(", "),
     createdAt: order.createdAt,
     totalPrice: order.totalPrice,
     isPaid: order.isPaid,

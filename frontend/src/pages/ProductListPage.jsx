@@ -28,9 +28,15 @@ const ProductListPage = () => {
 
   console.log(page);
 
+  // const totalValue = products
+  //   ?.filter((product) => product.price)
+  //   .reduce((total, product) => total + product.price, 0);
   const totalValue = products
-    ?.filter((product) => product.price)
-    .reduce((total, product) => total + product.price, 0);
+    ?.filter((product) => product.countInStock > 0) // Filter products with countInStock greater than 0
+    .reduce(
+      (total, product) => total + product.price * product.countInStock,
+      0
+    );
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -97,6 +103,7 @@ const ProductListPage = () => {
     { field: "name", headerName: "Name", width: 200 },
     { field: "name_fa", headerName: "نام", width: 200 },
     { field: "price", headerName: t("price"), width: 150 },
+    { field: "countInStock", headerName: t("count-in-stock"), width: 150 },
     { field: "category", headerName: "Category", width: 200 },
     { field: "category_fa", headerName: "کتگوری", width: 200 },
     { field: "brand", headerName: "Brand", width: 200 },
@@ -129,6 +136,7 @@ const ProductListPage = () => {
     name: product.name,
     name_fa: product.name_fa,
     price: product.price,
+    countInStock: product.countInStock,
     category: product.category,
     category_fa: product.category_fa,
     brand: product.brand,

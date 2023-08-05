@@ -36,10 +36,8 @@ const PaymentPage = () => {
       <CheckoutSteps step1 step2 step3 />
       <h1>{t("payment-method")}</h1>
       <Form onSubmit={submitHandler}>
-        <Form.Group>
-          <Form.Label as="legend">{t("select-method")}</Form.Label>
-        </Form.Group>
-        <Col className="my-3">
+        <h3>{t("select-method")}</h3>
+        <Col className="mt-3">
           <Form.Check
             type="radio"
             label={t("payment-label")}
@@ -57,9 +55,11 @@ const PaymentPage = () => {
             onChange={(e) => setPaymentMethod(e.target.value)}
           ></Form.Check>
         </Col>
-        <Button className="mt-3" type="submit" variant="info">
-          {t("continue")}
-        </Button>
+        <div className="mt-3">
+          <Button type="submit" variant="info">
+            {t("continue")}
+          </Button>
+        </div>
       </Form>
     </FormContainer>
   );

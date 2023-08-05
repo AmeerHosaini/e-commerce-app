@@ -22,7 +22,6 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
-import SuggestedProduct from "./SuggestedProduct";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -62,14 +61,6 @@ const Products = () => {
     }
     dispatch(listProductDetails(id));
   }, [dispatch, id, successProductReview]);
-
-  // Fetch list of products from the server
-  const productList = useSelector((state) => state.productList);
-  const { products } = productList;
-
-  useEffect(() => {
-    dispatch(listProducts()); // Dispatch an action to fetch the products
-  }, [dispatch]);
 
   // console.log(...Array(product.countInStock).keys());
 
@@ -241,11 +232,6 @@ const Products = () => {
                   )}
                 </ListGroup.Item>
               </ListGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <SuggestedProduct data={product} products={products} />
             </Col>
           </Row>
         </>
