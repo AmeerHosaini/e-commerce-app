@@ -101,8 +101,13 @@ const ProductEditPage = () => {
     if (isNaN(inputCountInStock) || inputCountInStock < 0) {
       setCountInStock(0);
     } else {
-      setPrice(inputCountInStock);
+      setCountInStock(inputCountInStock);
     }
+  };
+
+  const handleNameChange = (e) => {
+    const lowercaseName = e.target.value.toLowerCase();
+    setName(lowercaseName);
   };
 
   const submitHandler = (e) => {
@@ -145,7 +150,7 @@ const ProductEditPage = () => {
               <Form.Control
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
               ></Form.Control>
             </Form.Group>
 
