@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listOrders } from "../actions/orderActions";
+import OrderPDF from "../components/OrderPDF";
 
 const OrderListPage = () => {
   const dispatch = useDispatch();
@@ -103,6 +104,11 @@ const OrderListPage = () => {
               <Card.Text>${totalUnpaidPrice}</Card.Text>
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+      <Row className="my-4">
+        <Col md={4}>
+          <OrderPDF orders={orders} />
         </Col>
       </Row>
       {loading ? (
