@@ -51,7 +51,7 @@ const OrderPDFReport = ({ orders }) => {
 
   return (
     <>
-      <Button className="btn-info" onClick={handlePrintPDF}>
+      <Button variant="info" onClick={handlePrintPDF}>
         Generate PDF
       </Button>
     </>

@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Row, Col, Card } from "react-bootstrap";
+import { Button, Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listUsers, deleteUser } from "../actions/userActions";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import * as React from "react";
 
 const UserListPage = () => {
   const dispatch = useDispatch();
@@ -47,6 +49,63 @@ const UserListPage = () => {
     }
   };
 
+  const columns = [
+    { field: "id", headerName: "ID", flex: 1 },
+    { field: "name", headerName: "Name", flex: 1 },
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 1,
+      renderCell: (params) => (
+        <a href={`mailto:${params.value}`}>{params.value}</a>
+      ),
+    },
+    {
+      field: "isAdmin",
+      headerName: "Admin",
+      flex: 1,
+      renderCell: (params) => (
+        <React.Fragment>
+          {params.value ? (
+            <i className="fas fa-check" style={{ color: "green" }} />
+          ) : (
+            <i className="fas fa-times" style={{ color: "red" }} />
+          )}
+        </React.Fragment>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      renderCell: (params) => (
+        <React.Fragment>
+          <LinkContainer to={`/admin/user/${params.row.id}/edit`}>
+            <Button variant="info" size="small">
+              <i className="fas fa-edit" />
+            </Button>
+          </LinkContainer>
+          <Button
+            variant="danger"
+            size="small"
+            onClick={() => deleteHandler(params.row.id)}
+          >
+            <i className="fas fa-trash" />
+          </Button>
+        </React.Fragment>
+      ),
+    },
+  ];
+
+  console.log(users);
+
+  const rows = users?.map((user) => ({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  }));
+
   return (
     <>
       <h1>{t("users")}</h1>
@@ -73,49 +132,22 @@ const UserListPage = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
-          <thead>
-            <tr>
-              <th>{t("id")}</th>
-              <th>{t("name_")}</th>
-              <th>{t("email_")}</th>
-              <th>{t("admin_")}</th>
-              <th>{t("action")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user._id}</td>
-                <td>{user.name}</td>
-                <td>
-                  <a href={`mailto:${user.email}`}>{user.email}</a>
-                </td>
-                <td>
-                  {user.isAdmin ? (
-                    <i className="fas fa-check" style={{ color: "green" }}></i>
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
-                </td>
-                <td>
-                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
-                    <Button variant="primary" className="btn-sm">
-                      <i className="fas fa-edit"></i>
-                    </Button>
-                  </LinkContainer>
-                  <Button
-                    variant="danger"
-                    className="btn-sm"
-                    onClick={() => deleteHandler(user._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <div style={{ height: 500, width: "100%" }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            autoHeight
+            disableColumnFilter={false}
+            disableColumnMenu={false}
+            disableColumnSelector={false}
+            density="standard"
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>
       )}
     </>
   );

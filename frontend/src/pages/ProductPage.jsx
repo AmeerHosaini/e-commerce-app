@@ -79,7 +79,7 @@ const Products = () => {
 
   return (
     <>
-      <Link className="btn btn-dark my-3 rounded" to="/">
+      <Link className="btn btn-info my-3 rounded" to="/">
         {t("go-back")}
       </Link>
       {loading ? (
@@ -160,6 +160,7 @@ const Products = () => {
                       <Button
                         onClick={addToCartHandler}
                         className="btn-block"
+                        variant="info"
                         type="button"
                         disabled={product.countInStock === 0}
                       >
@@ -217,7 +218,7 @@ const Products = () => {
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button type="submit" variant="primary">
+                      <Button type="submit" variant="info">
                         {t("post")}
                       </Button>
                     </Form>

@@ -42,7 +42,7 @@ const CartPage = () => {
         {cartItems.length === 0 ? (
           <Message>
             {t("cart-empty")}{" "}
-            <Link className="login-link" to="/">
+            <Link className="login-link btn-info" to="/">
               {t("go-back")}
             </Link>
           </Message>
@@ -113,6 +113,7 @@ const CartPage = () => {
           <ListGroup.Item>
             <Button
               type="button"
+              variant="info"
               className="btn-block"
               disabled={cartItems.length === 0}
               onClick={checkoutHandler}

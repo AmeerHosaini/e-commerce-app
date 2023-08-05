@@ -211,3 +211,7 @@ div.card {
 label.col-form-label, label.form-label, div.col, div.btn-google-login{
   color: var(--clr-font);
 }
+
+div.MuiDataGrid-columnHeaderTitle, div.MuiDataGrid-cellContent, .MuiTablePagination-actions button svg{
+  color: var(--clr-font);
+}

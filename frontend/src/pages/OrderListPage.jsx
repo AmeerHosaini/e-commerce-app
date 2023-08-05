@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Row, Col, Card } from "react-bootstrap";
+import { Button, Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listOrders } from "../actions/orderActions";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import OrderPDF from "../components/OrderPDF";
 
 const OrderListPage = () => {
@@ -50,6 +51,73 @@ const OrderListPage = () => {
     }
     // When admin deletes a user, we want the page to refresh and show the remaining users
   }, [dispatch, navigate, userInfo]);
+
+  // Define columns for the data grid
+  const columns = [
+    { field: "id", headerName: t("id"), width: 200 },
+    {
+      field: "user",
+      headerName: t("user_"),
+      width: 200,
+      valueGetter: (params) => params.row.user?.name || "",
+    },
+    {
+      field: "date",
+      headerName: t("date"),
+      width: 150,
+      valueGetter: (params) => params.row.createdAt?.substring(0, 10) || "",
+    },
+    {
+      field: "total",
+      headerName: t("total"),
+      width: 150,
+      valueGetter: (params) => `$${params.row.totalPrice || ""}`,
+    },
+    {
+      field: "paid",
+      headerName: t("paid"),
+      width: 150,
+      valueGetter: (params) =>
+        params.row.isPaid
+          ? params.row.paidAt?.substring(0, 10) || ""
+          : t("not-paid"),
+      align: "center",
+    },
+    {
+      field: "delivered",
+      headerName: t("delivered"),
+      width: 150,
+      valueGetter: (params) =>
+        params.row.isDelivered
+          ? params.row.deliveredAt?.substring(0, 10) || ""
+          : t("not-delivered"),
+      align: "center",
+    },
+    {
+      field: "details",
+      headerName: t("details"),
+      width: 150,
+      renderCell: (params) => (
+        <LinkContainer to={`/order/${params.row.id}`}>
+          <Button variant="info" size="small">
+            {t("details")}
+          </Button>
+        </LinkContainer>
+      ),
+    },
+  ];
+
+  // Create rows data for the data grid
+  const rows = orders?.map((order) => ({
+    id: order._id,
+    user: order.user,
+    createdAt: order.createdAt,
+    totalPrice: order.totalPrice,
+    isPaid: order.isPaid,
+    paidAt: order.paidAt,
+    isDelivered: order.isDelivered,
+    deliveredAt: order.deliveredAt,
+  }));
 
   return (
     <>
@@ -106,7 +174,7 @@ const OrderListPage = () => {
           </Card>
         </Col>
       </Row>
-      <Row className="my-4">
+      <Row className="my-2">
         <Col md={4}>
           <OrderPDF orders={orders} />
         </Col>
@@ -116,49 +184,22 @@ const OrderListPage = () => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
-          <thead>
-            <tr>
-              <th>{t("id")}</th>
-              <th>{t("user_")}</th>
-              <th>{t("date")}</th>
-              <th>{t("total")}</th>
-              <th>{t("paid")}</th>
-              <th>{t("delivered")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.user && order.user.name}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>${order.totalPrice}</td>
-                <td>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
-                </td>
-                <td>
-                  {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
-                </td>
-                <td>
-                  <LinkContainer to={`/order/${order._id}`}>
-                    <Button variant="primary" className="btn-sm">
-                      {t("details")}
-                    </Button>
-                  </LinkContainer>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <div style={{ height: 500, width: "100%" }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            autoHeight
+            disableColumnFilter={false}
+            disableColumnMenu={false}
+            disableColumnSelector={false}
+            density="standard"
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>
       )}
     </>
   );

@@ -107,11 +107,7 @@ const LoginPage = () => {
                   }}
                   onClick={togglePassword}
                 >
-                  {isVisible ? (
-                    <MdVisibility className="text-info" />
-                  ) : (
-                    <MdVisibilityOff className="text-info" />
-                  )}
+                  {isVisible ? <MdVisibility /> : <MdVisibilityOff />}
                 </div>
               </div>
             </Form.Group>

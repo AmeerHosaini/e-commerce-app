@@ -254,6 +254,7 @@ const OrderDetailsPage = () => {
                     <Button
                       type="button"
                       className="btn btn-block"
+                      variant="info"
                       onClick={deliverHandler}
                     >
                       {t("mark-delivered")}
@@ -268,6 +269,7 @@ const OrderDetailsPage = () => {
                   <ListGroup.Item>
                     <Button
                       type="button"
+                      variant="info"
                       className="btn btn-block"
                       onClick={updateToPaidOnDelivery}
                     >

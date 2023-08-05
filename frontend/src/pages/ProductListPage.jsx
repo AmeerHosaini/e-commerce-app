@@ -13,6 +13,8 @@ import {
   createProduct,
 } from "../actions/productAction";
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
+import * as React from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 const ProductListPage = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,8 @@ const ProductListPage = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, pages, page } = productList;
+
+  console.log(page);
 
   const totalValue = products
     ?.filter((product) => product.price)
@@ -88,6 +92,49 @@ const ProductListPage = () => {
     dispatch(createProduct());
   };
 
+  const columns = [
+    { field: "id", headerName: t("id"), width: 150 },
+    { field: "name", headerName: "Name", width: 200 },
+    { field: "name_fa", headerName: "نام", width: 200 },
+    { field: "price", headerName: t("price"), width: 150 },
+    { field: "category", headerName: "Category", width: 200 },
+    { field: "category_fa", headerName: "کتگوری", width: 200 },
+    { field: "brand", headerName: "Brand", width: 200 },
+    { field: "brand_fa", headerName: "نام تجاری", width: 200 },
+    {
+      field: "actions",
+      headerName: t("action"),
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <LinkContainer to={`/admin/product/${params.row.id}/edit`}>
+            <Button variant="info" className="w-100 btn-sm">
+              <i className="fas fa-edit"></i>
+            </Button>
+          </LinkContainer>
+          <Button
+            variant="danger"
+            className="w-100 btn-sm mt-2"
+            onClick={() => deleteHandler(params.row.id)}
+          >
+            <i className="fas fa-trash"></i>
+          </Button>
+        </>
+      ),
+    },
+  ];
+
+  const rows = products?.map((product) => ({
+    id: product._id,
+    name: product.name,
+    name_fa: product.name_fa,
+    price: product.price,
+    category: product.category,
+    category_fa: product.category_fa,
+    brand: product.brand,
+    brand_fa: product.brand_fa,
+  }));
+
   return (
     <>
       <Row className="align-items-center">
@@ -113,7 +160,11 @@ const ProductListPage = () => {
           </Col>
         </Row>
         <Col className="text-right">
-          <Button className="my-3" onClick={createProductHandler}>
+          <Button
+            className="my-3"
+            variant="info"
+            onClick={createProductHandler}
+          >
             <i className="fas fa-plus"></i> {t("create-product")}
           </Button>
         </Col>
@@ -128,49 +179,22 @@ const ProductListPage = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <Table striped bordered hover responsive className="table-sm">
-            <thead>
-              <tr>
-                <th>{t("id")}</th>
-                <th>Name</th>
-                <th>نام</th>
-                <th>{t("price")}</th>
-                <th>Category</th>
-                <th>کتگوری</th>
-                <th>Brand</th>
-                <th>نام تجاری</th>
-                <th>{t("action")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>{product.name_fa}</td>
-                  <td>${product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.category_fa}</td>
-                  <td>{product.brand}</td>
-                  <td>{product.brand_fa}</td>
-                  <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="primary" className="w-100 btn-sm">
-                        <i className="fas fa-edit"></i>
-                      </Button>
-                    </LinkContainer>
-                    <Button
-                      variant="danger"
-                      className="w-100 btn-sm"
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <i className="fas fa-trash"></i>
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <div style={{ height: 500, width: "100%" }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5, 10, 20]}
+              autoHeight
+              disableColumnFilter={false}
+              disableColumnMenu={false}
+              disableColumnSelector={false}
+              density="standard"
+              components={{
+                Toolbar: GridToolbar,
+              }}
+            />
+          </div>
           <Paginate pages={pages} page={page} isAdmin={true} />
         </>
       )}

@@ -53,7 +53,7 @@ const UserEditPage = () => {
 
   return (
     <>
-      <Link to="/admin/userlist" className="btn btn-primary my-3">
+      <Link to="/admin/userlist" className="btn btn-info my-3">
         {t("go-back")}
       </Link>
       <h1>{t("edit-user")}</h1>
@@ -94,7 +94,7 @@ const UserEditPage = () => {
                 onChange={(e) => setIsAdmin(e.target.checked)}
               ></Form.Check>
             </Form.Group>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="info">
               {t("update-user")}
             </Button>
           </Form>

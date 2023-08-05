@@ -290,13 +290,13 @@ const Home = () => {
                 </FormControl>
               </Grid>
             </Grid>
-            <Button className="btn btn-primary" onClick={clearAllFilters}>
+            <Button className="btn btn-info" onClick={clearAllFilters}>
               {t("clear-all")}
             </Button>
           </StyledPaper>
         </>
       ) : (
-        <Link to="/" className="btn btn-dark">
+        <Link to="/" className="btn btn-info">
           {t("go-back")}
         </Link>
       )}

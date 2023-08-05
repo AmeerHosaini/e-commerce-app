@@ -20,7 +20,6 @@ import {
   ORDER_DELIVER_PAY_REQUEST,
   ORDER_DELIVER_PAY_SUCCESS,
   ORDER_DELIVER_PAY_FAIL,
-  ORDER_DELIVER_PAY_RESET,
 } from "../constants/orderConstant";
 import axios from "axios";
 

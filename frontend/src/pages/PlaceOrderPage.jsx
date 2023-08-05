@@ -153,6 +153,7 @@ const PlaceOrderPage = () => {
                 <Button
                   type="button"
                   className="btn-block"
+                  variant="info"
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >

@@ -127,7 +127,7 @@ const ProductEditPage = () => {
 
   return (
     <>
-      <Link to="/admin/productList" className="btn btn-primary my-3">
+      <Link to="/admin/productList" className="btn btn-info my-3">
         {t("go-back")}
       </Link>
       <h1>{t("edit-product")}</h1>
@@ -246,7 +246,7 @@ const ProductEditPage = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type="submit" variant="primary" className="my-3">
+            <Button type="submit" variant="info" className="my-3">
               {t("update-product")}
             </Button>
           </Form>

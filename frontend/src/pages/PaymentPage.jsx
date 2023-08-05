@@ -57,7 +57,7 @@ const PaymentPage = () => {
             onChange={(e) => setPaymentMethod(e.target.value)}
           ></Form.Check>
         </Col>
-        <Button className="mt-3" type="submit" variant="primary">
+        <Button className="mt-3" type="submit" variant="info">
           {t("continue")}
         </Button>
       </Form>

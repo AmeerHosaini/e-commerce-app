@@ -6,7 +6,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Form, Button, Col, Row, Card } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import FormContainer from "../components/FormContainer";
 import { register } from "../actions/userActions";
 
 const RegisterPage = () => {
