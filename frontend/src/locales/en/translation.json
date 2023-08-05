@@ -178,5 +178,6 @@
   "orders-not-delivered": "Orders Not Delivered",
   "paid-total": "Paid Total",
   "not-paid-total": "Not Paid Total",
-  "total-value": "Products Value"
+  "total-value": "Products Value",
+  "related-product": "Related Products"
 }

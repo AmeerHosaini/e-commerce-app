@@ -13,18 +13,18 @@ import {
 import Rating from "../components/Rating";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { listProductDetails, createReview } from "../actions/productAction";
+import {
+  listProductDetails,
+  createReview,
+  listProducts,
+} from "../actions/productAction";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
+import SuggestedProduct from "./SuggestedProduct";
 
 const Products = () => {
-  // console.log(params.id);
-  // We will fetch it from the backend
-  // const product = products.find((product) => product._id === params.id);
-  // const [product, setProduct] = useState({});
-
   const { t } = useTranslation();
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(0);
@@ -63,7 +63,15 @@ const Products = () => {
     dispatch(listProductDetails(id));
   }, [dispatch, id, successProductReview]);
 
-  console.log(...Array(product.countInStock).keys());
+  // Fetch list of products from the server
+  const productList = useSelector((state) => state.productList);
+  const { products } = productList;
+
+  useEffect(() => {
+    dispatch(listProducts()); // Dispatch an action to fetch the products
+  }, [dispatch]);
+
+  // console.log(...Array(product.countInStock).keys());
 
   const addToCartHandler = () => {
     // we want to go to the cart page
@@ -233,6 +241,11 @@ const Products = () => {
                   )}
                 </ListGroup.Item>
               </ListGroup>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <SuggestedProduct data={product} products={products} />
             </Col>
           </Row>
         </>

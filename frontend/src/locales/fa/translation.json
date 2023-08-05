@@ -177,5 +177,6 @@
   "orders-not-delivered": "سفارشات تحویل داده نشده",
   "paid-total": "مجموعه پرداخت شده",
   "not-paid-total": "مجموعه پرداخت نشده",
-  "total-value": "مجموعه محصولات"
+  "total-value": "مجموعه محصولات",
+  "related-product": "محصولات مشابه"
 }
