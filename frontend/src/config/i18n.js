@@ -30,8 +30,8 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    // lng: localStorage.getItem("i18nextLng") || "fa",
-    lng: "en",
+    lng: localStorage.getItem("i18nextLng") || "en",
+    // lng: "en",
     resources,
     // backend: {
     //   loadPath: `http://127.0.0.1:5000/locales/{{lng}}/{{ns}}.json`,

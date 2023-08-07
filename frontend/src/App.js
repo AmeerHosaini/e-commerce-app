@@ -53,6 +53,11 @@ const App = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  useEffect(() => {
+    const direction = localStorage.getItem("i18nextLng");
+    document.documentElement.dir = direction === "fa" ? "rtl" : "ltr";
+  }, []);
+
   return (
     <I18nextProvider i18n={i18n}>
       <Router>

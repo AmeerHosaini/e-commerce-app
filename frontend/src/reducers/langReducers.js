@@ -3,7 +3,10 @@ import {
   CHANGE_LANG_TO_FA,
 } from "../constants/langConstants";
 
-export const changeLangReducer = (state = { lang: "en" }, action) => {
+export const changeLangReducer = (
+  state = { lang: localStorage.getItem("i18nextLng") },
+  action
+) => {
   switch (action.type) {
     case CHANGE_LANG_TO_EN:
       return { lang: "en" };

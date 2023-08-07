@@ -87,9 +87,9 @@ const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
   ? JSON.parse(localStorage.getItem("shippingAddress"))
   : {};
 
-const languageFromStorage = localStorage.getItem("language")
-  ? JSON.parse(localStorage.getItem("language"))
-  : "en";
+// const languageFromStorage = localStorage.getItem("language")
+//   ? JSON.parse(localStorage.getItem("language"))
+//   : { lang: "en" }; // Set your default language here, "en" in this case
 
 const initialState = {
   cart: {
@@ -99,7 +99,7 @@ const initialState = {
   },
   userLogin: { userInfo: userInfoFromStorage },
   userGoogleLogin: { userInfo: userInfoFromStorage },
-  // lang: languageFromStorage,
+  // changeLang: languageFromStorage,
 };
 
 const middleware = [thunk];
