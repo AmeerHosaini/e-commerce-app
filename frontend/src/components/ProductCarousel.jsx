@@ -11,6 +11,9 @@ const ProductCarousel = () => {
   const productTopRated = useSelector((state) => state.productTopRated);
   const { loading, products, error } = productTopRated;
 
+  const changeLang = useSelector((state) => state.changeLang);
+  const { lang } = changeLang;
+
   useEffect(() => {
     dispatch(topProducts());
   }, [dispatch]);
@@ -28,7 +31,8 @@ const ProductCarousel = () => {
             <Image src={product.image} alt={product.name} fluid />
             <Carousel.Caption className="carousel-caption">
               <h2>
-                {product.name} (${product.price})
+                {lang === "en" ? product.name : product.name_fa} ($
+                {product.price})
               </h2>
             </Carousel.Caption>
           </Link>
