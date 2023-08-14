@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Col, Row, Card } from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -18,24 +18,28 @@ const RegisterPage = () => {
   const { t } = useTranslation();
 
   const dispatch = useDispatch();
-  // const userRegister = useSelector((state) => state.userRegister);
-  // const { loading, userInfo, error } = userRegister;
 
   const userRegister = useSelector((state) => state.userRegister);
   const { loading, success, error } = userRegister;
 
-  // const navigate = useNavigate();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const userGoogleLogin = useSelector((state) => state.userGoogleLogin);
+  const { userInfo: googleUserInfo } = userGoogleLogin;
+
+  const navigate = useNavigate();
   const location = useLocation();
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
   // We want to redirect --- Basically if we register, after our data is submitted to the db, we should see something. That would be the home page not the register page
   // We dont want to come to the registration page if we are registered
-  // useEffect(() => {
-  //   // if user is not logged in, it will be null
-  //   if (userInfo) {
-  //     navigate(redirect);
-  //   }
-  // }, [navigate, userInfo, redirect]);
+  useEffect(() => {
+    // if user is not logged in, it will be null
+    if (userInfo || googleUserInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, userInfo, redirect, googleUserInfo]);
   // In the activation case, we don't want to go anywhere and stay in the registeration page until the user opens his email and activate account.
 
   const submitHandler = (e) => {
