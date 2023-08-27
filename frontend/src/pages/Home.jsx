@@ -163,13 +163,13 @@ const Home = () => {
 
     if (type === "lower") {
       newRange = [...priceRange];
-      newRange[0] = Number(e.target.value);
+      newRange[0] = Math.max(Number(e.target.value), 0);
       setPriceRange(newRange);
     }
 
     if (type === "upper") {
       newRange = [...priceRange];
-      newRange[1] = Number(e.target.value);
+      newRange[1] = Math.max(Number(e.target.value), 0);
       setPriceRange(newRange);
     }
   };

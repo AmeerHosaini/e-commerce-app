@@ -13,15 +13,12 @@ import {
 import Rating from "../components/Rating";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  listProductDetails,
-  createReview,
-  listProducts,
-} from "../actions/productAction";
+import { listProductDetails, createReview } from "../actions/productAction";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 const Products = () => {
   const { t } = useTranslation();
@@ -63,6 +60,14 @@ const Products = () => {
   }, [dispatch, id, successProductReview]);
 
   // console.log(...Array(product.countInStock).keys());
+
+  const handleQuantityChange = (changeAmount) => {
+    const newQuantity = quantity + changeAmount;
+
+    if (newQuantity >= 1 && newQuantity <= product.countInStock) {
+      setQuantity(newQuantity);
+    }
+  };
 
   const addToCartHandler = () => {
     // we want to go to the cart page
@@ -134,7 +139,7 @@ const Products = () => {
                   </ListGroupItem>
                   {product.countInStock > 0 && (
                     <ListGroup.Item>
-                      <Row>
+                      {/* <Row>
                         <Col className="my-2">{t("qty")}:</Col>
                         <Col>
                           <Form.Control
@@ -151,7 +156,42 @@ const Products = () => {
                             )}
                           </Form.Control>
                         </Col>
+                      </Row> */}
+                      <Row>
+                        <Col className="my-2">{t("qty")}:</Col>
+                        <Col>
+                          <Form.Control
+                            as="div" // Render as a div to allow custom styling
+                            className="d-flex align-items-center"
+                          >
+                            <button
+                              className="quantity-button"
+                              onClick={() => handleQuantityChange(-1)}
+                              disabled={quantity <= 1}
+                            >
+                              <FaMinus />
+                            </button>
+                            <span className="quantity-value">{quantity}</span>
+                            <button
+                              className="quantity-button"
+                              onClick={() => handleQuantityChange(1)}
+                              disabled={quantity >= product.countInStock}
+                            >
+                              <FaPlus />
+                            </button>
+                          </Form.Control>
+                          {/* {quantity > product.countInStock && (
+                            <div className="bg-danger mt-2 p-1">
+                              You cannot select more than {product.countInStock}
+                            </div>
+                          )} */}
+                        </Col>
                       </Row>
+                      <p className="bg-warning p-2 mt-2">
+                        Note that there are {product.countInStock}{" "}
+                        {product.name} in stock, you cannot choose more than
+                        that
+                      </p>
                     </ListGroup.Item>
                   )}
                   <ListGroupItem>

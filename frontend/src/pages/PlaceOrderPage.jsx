@@ -138,6 +138,9 @@ const PlaceOrderPage = () => {
                 <Row>
                   <Col>{t("tax")}</Col>
                   <Col>${cart.taxPrice}</Col>
+                  <p className="bg-warning p-2 mt-2">
+                    15% of purchased item is evaluated for tax
+                  </p>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
